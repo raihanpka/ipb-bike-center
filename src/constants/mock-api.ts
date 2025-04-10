@@ -1,157 +1,229 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 🛑 Nothing in here has anything to do with Nextjs, it's just a fake database
+// 🛑 Database palsu untuk data sepeda
 ////////////////////////////////////////////////////////////////////////////////
 
 import { faker } from '@faker-js/faker';
-import { matchSorter } from 'match-sorter'; // For filtering
+import { matchSorter } from 'match-sorter'; // Untuk filtering
 
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-// Define the shape of Product data
-export type Product = {
-  photo_url: string;
-  name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
+// Mendefinisikan bentuk DataSepeda
+export type DataSepeda = {
+  nomorSeri: string;
+  merk: string;
+  jenis: string;
+  status: string;
+  tanggalPerawatanTerakhir: string;
+  deskripsi: string;
 };
 
-// Mock product data store
-export const fakeProducts = {
-  records: [] as Product[], // Holds the list of product objects
+// Data sepeda palsu
+export const fakeDataSepeda = {
+  records: [] as DataSepeda[], // Menyimpan daftar objek sepeda
 
-  // Initialize with sample data
+  // Inisialisasi dengan data contoh
   initialize() {
-    const sampleProducts: Product[] = [];
-    function generateRandomProductData(id: number): Product {
-      const categories = [
-        'Electronics',
-        'Furniture',
-        'Clothing',
-        'Toys',
-        'Groceries',
-        'Books',
-        'Jewelry',
-        'Beauty Products'
-      ];
+    const sampleDataSepeda: DataSepeda[] = [];
 
+    const merkSepedaList = ['Polygon', 'Pacific', 'Wimcycle', 'Turanza', 'United', 'Senator', 'Genio'];
+    const jenisSepedaList = ['Gunung', 'Keranjang (City Bike)', 'Lipat', 'Elektrik'];
+    const statusSepedaList = ['Tersedia', 'Dipinjam', 'Sedang Perawatan'];
+
+    function generateRandomSepedaData(id: number): DataSepeda {
       return {
-        id,
-        name: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        created_at: faker.date
-          .between({ from: '2022-01-01', to: '2023-12-31' })
-          .toISOString(),
-        price: parseFloat(faker.commerce.price({ min: 5, max: 500, dec: 2 })),
-        photo_url: `https://api.slingacademy.com/public/sample-products/${id}.png`,
-        category: faker.helpers.arrayElement(categories),
-        updated_at: faker.date.recent().toISOString()
+        nomorSeri: `IPB${id.toString().padStart(3, '0')}`,
+        merk: faker.helpers.arrayElement(merkSepedaList),
+        jenis: faker.helpers.arrayElement(jenisSepedaList),
+        status: faker.helpers.arrayElement(statusSepedaList),
+        tanggalPerawatanTerakhir: faker.date
+          .between({ from: '2024-01-01', to: '2024-12-31' })
+          .toISOString()
+          .split('T')[0], // Format tanggal
+        deskripsi: faker.commerce.productDescription()
       };
     }
 
-    // Generate remaining records
+    // Membuat data contoh
     for (let i = 1; i <= 20; i++) {
-      sampleProducts.push(generateRandomProductData(i));
+      sampleDataSepeda.push(generateRandomSepedaData(i));
     }
 
-    this.records = sampleProducts;
+    this.records = sampleDataSepeda;
   },
 
-  // Get all products with optional category filtering and search
+  // Mendapatkan semua sepeda dengan filter dan pencarian opsional
   async getAll({
-    categories = [],
+    jenis = [],
+    status,
     search
   }: {
-    categories?: string[];
+    jenis?: string[];
+    status?: string;
     search?: string;
   }) {
-    let products = [...this.records];
+    let sepeda = [...this.records];
 
-    // Filter products based on selected categories
-    if (categories.length > 0) {
-      products = products.filter((product) =>
-        categories.includes(product.category)
+    // Filter berdasarkan jenis sepeda
+    if (jenis.length > 0) {
+      sepeda = sepeda.filter((item) =>
+        jenis.includes(item.jenis)
       );
     }
 
-    // Search functionality across multiple fields
+    // Filter berdasarkan status sepeda
+    if (status) {
+      sepeda = sepeda.filter((item) => item.status === status);
+    }
+
+    // Fungsi pencarian
     if (search) {
-      products = matchSorter(products, search, {
-        keys: ['name', 'description', 'category']
+      sepeda = matchSorter(sepeda, search, {
+        keys: ['merk', 'deskripsi', 'jenis']
       });
     }
 
-    return products;
+    return sepeda;
   },
 
-  // Get paginated results with optional category filtering and search
-  async getProducts({
+  // Mendapatkan hasil dengan paginasi
+  async getSepeda({
     page = 1,
     limit = 10,
-    categories,
+    jenis,
+    status,
     search
   }: {
     page?: number;
     limit?: number;
-    categories?: string;
+    jenis?: string;
+    status?: string;
     search?: string;
   }) {
     await delay(1000);
-    const categoriesArray = categories ? categories.split('.') : [];
-    const allProducts = await this.getAll({
-      categories: categoriesArray,
+    const jenisSepedaArray = jenis ? jenis.split('.') : [];
+    const allSepeda = await this.getAll({
+      jenis: jenisSepedaArray,
+      status,
       search
     });
-    const totalProducts = allProducts.length;
+    const totalSepeda = allSepeda.length;
 
-    // Pagination logic
+    // Logika paginasi
     const offset = (page - 1) * limit;
-    const paginatedProducts = allProducts.slice(offset, offset + limit);
+    const paginatedSepeda = allSepeda.slice(offset, offset + limit);
 
-    // Mock current time
+    // Waktu saat ini (mock)
     const currentTime = new Date().toISOString();
 
-    // Return paginated response
+    // Mengembalikan respons paginasi
     return {
       success: true,
       time: currentTime,
-      message: 'Sample data for testing and learning purposes',
-      total_products: totalProducts,
+      message: 'Data sepeda contoh untuk testing dan pembelajaran',
+      total_sepeda: totalSepeda,
       offset,
       limit,
-      products: paginatedProducts
+      sepeda: paginatedSepeda
     };
   },
 
-  // Get a specific product by its ID
-  async getProductById(id: number) {
-    await delay(1000); // Simulate a delay
+  // Mendapatkan sepeda tertentu berdasarkan nomor seri
+  async getSepedaByNomorSeri(nomorSeri: string) {
+    await delay(1000); // Mensimulasikan delay
 
-    // Find the product by its ID
-    const product = this.records.find((product) => product.id === id);
+    // Mencari sepeda berdasarkan nomor seri
+    const sepeda = this.records.find(
+      (item) => item.nomorSeri === nomorSeri
+    );
 
-    if (!product) {
+    if (!sepeda) {
       return {
         success: false,
-        message: `Product with ID ${id} not found`
+        message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
       };
     }
 
-    // Mock current time
+    // Waktu saat ini (mock)
     const currentTime = new Date().toISOString();
 
     return {
       success: true,
       time: currentTime,
-      message: `Product with ID ${id} found`,
-      product
+      message: `Sepeda dengan nomor seri ${nomorSeri} ditemukan`,
+      sepeda
+    };
+  },
+
+  // Membuat data sepeda baru
+  async createSepeda(data: Omit<DataSepeda, 'nomorSeri'> & { nomorSeri?: string }) {
+    await delay(1000);
+    
+    // Generate nomor seri jika tidak disediakan
+    const nomorSeri = data.nomorSeri || `IPB${(this.records.length + 1).toString().padStart(3, '0')}`;
+    
+    const newSepeda: DataSepeda = {
+      nomorSeri,
+      merk: data.merk,
+      jenis: data.jenis,
+      status: data.status,
+      tanggalPerawatanTerakhir: data.tanggalPerawatanTerakhir,
+      deskripsi: data.deskripsi
+    };
+
+    this.records.push(newSepeda);
+    
+    return {
+      success: true,
+      message: 'Data sepeda berhasil ditambahkan',
+      sepeda: newSepeda
+    };
+  },
+
+  // Memperbarui data sepeda
+  async updateSepeda(nomorSeri: string, data: Partial<DataSepeda>) {
+    await delay(1000);
+    
+    const index = this.records.findIndex(item => item.nomorSeri === nomorSeri);
+    if (index === -1) {
+      return {
+        success: false,
+        message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
+      };
+    }
+
+    this.records[index] = {
+      ...this.records[index],
+      ...data
+    };
+
+    return {
+      success: true,
+      message: 'Data sepeda berhasil diperbarui',
+      sepeda: this.records[index]
+    };
+  },
+
+  // Menghapus data sepeda
+  async deleteSepeda(nomorSeri: string) {
+    await delay(1000);
+    
+    const index = this.records.findIndex(item => item.nomorSeri === nomorSeri);
+    if (index === -1) {
+      return {
+        success: false,
+        message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
+      };
+    }
+
+    this.records.splice(index, 1);
+    
+    return {
+      success: true,
+      message: 'Data sepeda berhasil dihapus'
     };
   }
 };
 
-// Initialize sample products
-fakeProducts.initialize();
+// Inisialisasi data contoh sepeda
+fakeDataSepeda.initialize();

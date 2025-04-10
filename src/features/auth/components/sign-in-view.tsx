@@ -18,9 +18,8 @@ export function SignInViewPage() {
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <SignIn
-        afterSignInUrl='/dashboard/overview'
-        afterSignUpUrl='/dashboard/overview'
-        redirectUrl='/dashboard/overview'
+        fallbackRedirectUrl='/dashboard/overview'
+        signUpFallbackRedirectUrl='/dashboard/overview'
       />
     </div>
   );
