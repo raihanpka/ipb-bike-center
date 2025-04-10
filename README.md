@@ -47,13 +47,13 @@ Aplikasi ini akan berjalan pada [http://localhost:3000](http://localhost:3000) s
 1. Fork repositori ini
 2. Buat branch baru:
    ```bash
-   git checkout -b fitur/nama-fiturmu
+   git checkout -b development
    ```
 3. Modifikasi sesuai perubahan yang kamu inginkan ✨
 4. Commit lalu push:
    ```bash
    git commit -m "Add your feature"
-   git push origin fitur/nama-fiturmu
+   git push origin development
    ```
 5. Ajukan Pull Request ✅
 
