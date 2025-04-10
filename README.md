@@ -32,7 +32,19 @@ npm install
 yarn
 ```
 
-Mulai server untuk developmentnya dengan cara:
+## Setup Environment Variables
+
+1. Go to [Clerk](https://clerk.com)
+2. Create a new project
+3. Enable **Authentication** (Email/Password or other provider)
+4. Copy your Clerk API keys and paste them into a `.env.local` file:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
+CLERK_SECRET_KEY=your-clerk-secret-key
+```
+
+Setelah terisi, untuk memulai server untuk development jalankan:
 
 ```bash
 npm run dev
@@ -59,7 +71,7 @@ Aplikasi ini akan berjalan pada [http://localhost:3000](http://localhost:3000) s
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 MIT License. Feel free to fork and build your own ✌️
 
