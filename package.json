@@ -14,8 +14,7 @@
     "lint:fix": "eslint src --fix && pnpm format",
     "lint:strict": "eslint --max-warnings=0 src",
     "format": "prettier --write .",
-    "format:check": "prettier -c -w .",
-    "prepare": "husky"
+    "format:check": "prettier -c -w ."
   },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
@@ -65,10 +64,9 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "eslint": "8.48.0",
+    "eslint": "9.24.0",
     "eslint-config-next": "15.1.0",
     "input-otp": "^1.4.2",
-    "kbar": "^0.1.0-beta.45",
     "lucide-react": "^0.476.0",
     "match-sorter": "^8.0.0",
     "motion": "^11.17.0",
@@ -78,7 +76,7 @@
     "nuqs": "^2.4.1",
     "postcss": "8.4.49",
     "react": "19.0.0",
-    "react-day-picker": "^8.10.1",
+    "react-day-picker": "^9.6.5",
     "react-dom": "19.0.0",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.54.1",
@@ -104,8 +102,7 @@
     "@types/react-dom": "19.0.2",
     "@types/sort-by": "^1.2.3",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "husky": "^9.1.7",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
     "lint-staged": "^15.2.11",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
