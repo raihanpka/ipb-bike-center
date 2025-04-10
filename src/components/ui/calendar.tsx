@@ -65,8 +65,8 @@ function Calendar({
         ...classNames
       }}
       components={{
-        IconLeft: LeftIcon,
-        IconRight: RightIcon
+        IconPrevious: LeftIcon as React.ComponentType,
+        IconNext: RightIcon as React.ComponentType
       }}
       {...props}
     />
