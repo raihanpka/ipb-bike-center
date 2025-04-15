@@ -13,16 +13,40 @@ import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { supabase } from '@/lib/supabase';
+
 interface CellActionProps {
   data: Sepeda;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('DataSepeda')
+        .delete()
+        .eq('nomorSeri', data.nomorSeri);
+
+      if (error) {
+        alert('Gagal menghapus data: ' + error.message);
+      } else {
+        setOpen(false);
+        router.refresh(); // Refresh halaman setelah penghapusan
+      }
+
+      window.location.href = '/dashboard/data-sepeda';
+
+    } catch (err: any) {
+      alert('Unexpected error: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>

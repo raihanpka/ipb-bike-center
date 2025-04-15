@@ -1,4 +1,4 @@
-import { fakeDataSepeda, DataSepeda } from '@/constants/mock-api';
+import { ambilDataSepeda, DataSepeda } from '@/constants/mock-api';
 import { notFound } from 'next/navigation';
 import DataSepedaForm from './data-sepeda-form';
 
@@ -13,7 +13,7 @@ export default async function DataSepedaViewPage({
   let pageTitle = 'Memasukkan Data Sepeda Baru';
 
   if (nomorSeri !== 'new') {
-    const data = await fakeDataSepeda.getSepedaByNomorSeri(nomorSeri);
+    const data = await ambilDataSepeda.getSepedaByNomorSeri(nomorSeri);
     sepeda = data.sepeda as DataSepeda;
     if (!sepeda) {
       notFound();

@@ -6,6 +6,7 @@ import { Column, ColumnDef } from '@tanstack/react-table';
 import { CheckCircle2, Text, XCircle } from 'lucide-react';
 import { CellAction } from './cell-action';
 import { CATEGORY_OPTIONS } from './options';
+import { supabase } from '@/lib/supabase';
 
 export const columns: ColumnDef<Sepeda>[] = [
   {
@@ -42,7 +43,7 @@ export const columns: ColumnDef<Sepeda>[] = [
     },
     enableColumnFilter: true,
     meta: {
-      label: 'Jenis Sepeda',
+      label: 'Sepeda',
       variant: 'multiSelect',
       options: CATEGORY_OPTIONS
     }

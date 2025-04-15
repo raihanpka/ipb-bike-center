@@ -19,10 +19,11 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { DataSepeda, fakeDataSepeda } from '@/constants/mock-api';
+import { DataSepeda } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { supabase } from '@/lib/supabase';
 
 const formSchema = z.object({
   nomorSeri: z.string().min(3, {
@@ -34,6 +35,7 @@ const formSchema = z.object({
   tanggalPerawatanTerakhir: z.string().optional(),
   deskripsi: z.string()
 });
+
 
 export default function DataSepedaForm({
   initialData,
@@ -58,27 +60,36 @@ export default function DataSepedaForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Ensure tanggalPerawatanTerakhir is not undefined
+      // Memastikan nomorSeri tidak kosong
       const submissionData = {
         ...values,
-        tanggalPerawatanTerakhir: values.tanggalPerawatanTerakhir || ''
+        nomorSeri: values.nomorSeri || ''
       };
 
       if (initialData) {
-        // Update existing record
-        const result = await fakeDataSepeda.updateSepeda(initialData.nomorSeri, submissionData);
-        if (!result.success) {
-          throw new Error(result.message);
+        const { error } = await supabase
+          .from('DataSepeda')
+          .update(submissionData)
+          .eq('nomorSeri', initialData.nomorSeri);
+
+        if (error) {
+          throw new Error(error.message);
         }
+
         alert('Data sepeda berhasil diperbarui!');
       } else {
-        // Create new record
-        const result = await fakeDataSepeda.createSepeda(submissionData);
-        if (!result.success) {
-          throw new Error(result.message);
+        const { error } = await supabase
+          .from('DataSepeda')
+          .insert(submissionData);
+
+        if (error) {
+          throw new Error(error.message);
         }
+
         alert('Data sepeda baru berhasil ditambahkan!');
       }
+
+      window.location.href = '/dashboard/data-sepeda';
     } catch (error) {
       alert(`Gagal menyimpan data: ${error instanceof Error ? error.message : String(error)}`);
     }

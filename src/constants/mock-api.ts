@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 🛑 Database palsu untuk data sepeda
+// Database API
 ////////////////////////////////////////////////////////////////////////////////
 
-import { faker } from '@faker-js/faker';
 import { matchSorter } from 'match-sorter'; // Untuk filtering
+import { supabase } from '@/lib/supabase'; // Supabase client
 
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,40 +18,8 @@ export type DataSepeda = {
   deskripsi: string;
 };
 
-// Data sepeda palsu
-export const fakeDataSepeda = {
-  records: [] as DataSepeda[], // Menyimpan daftar objek sepeda
-
-  // Inisialisasi dengan data contoh
-  initialize() {
-    const sampleDataSepeda: DataSepeda[] = [];
-
-    const merkSepedaList = ['Polygon', 'Pacific', 'Wimcycle', 'Turanza', 'United', 'Senator', 'Genio'];
-    const jenisSepedaList = ['Gunung', 'Keranjang (City Bike)', 'Lipat', 'Elektrik'];
-    const statusSepedaList = ['Tersedia', 'Dipinjam', 'Sedang Perawatan'];
-
-    function generateRandomSepedaData(id: number): DataSepeda {
-      return {
-        nomorSeri: `IPB${id.toString().padStart(3, '0')}`,
-        merk: faker.helpers.arrayElement(merkSepedaList),
-        jenis: faker.helpers.arrayElement(jenisSepedaList),
-        status: faker.helpers.arrayElement(statusSepedaList),
-        tanggalPerawatanTerakhir: faker.date
-          .between({ from: '2024-01-01', to: '2024-12-31' })
-          .toISOString()
-          .split('T')[0], // Format tanggal
-        deskripsi: faker.commerce.productDescription()
-      };
-    }
-
-    // Membuat data contoh
-    for (let i = 1; i <= 20; i++) {
-      sampleDataSepeda.push(generateRandomSepedaData(i));
-    }
-
-    this.records = sampleDataSepeda;
-  },
-
+// Data sepeda
+export const ambilDataSepeda = {
   // Mendapatkan semua sepeda dengan filter dan pencarian opsional
   async getAll({
     jenis = [],
@@ -62,28 +30,32 @@ export const fakeDataSepeda = {
     status?: string;
     search?: string;
   }) {
-    let sepeda = [...this.records];
+    let query = supabase.from('DataSepeda').select('*');
 
     // Filter berdasarkan jenis sepeda
     if (jenis.length > 0) {
-      sepeda = sepeda.filter((item) =>
-        jenis.includes(item.jenis)
-      );
+      query = query.in('jenis', jenis);
     }
 
     // Filter berdasarkan status sepeda
     if (status) {
-      sepeda = sepeda.filter((item) => item.status === status);
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      throw new Error(`Error fetching data: ${error.message}`);
     }
 
     // Fungsi pencarian
-    if (search) {
-      sepeda = matchSorter(sepeda, search, {
+    if (search && data) {
+      return matchSorter(data, search, {
         keys: ['merk', 'deskripsi', 'jenis']
       });
     }
 
-    return sepeda;
+    return data || [];
   },
 
   // Mendapatkan hasil dengan paginasi
@@ -120,7 +92,7 @@ export const fakeDataSepeda = {
     return {
       success: true,
       time: currentTime,
-      message: 'Data sepeda contoh untuk testing dan pembelajaran',
+      message: 'Data sepeda dari database Supabase',
       total_sepeda: totalSepeda,
       offset,
       limit,
@@ -132,12 +104,13 @@ export const fakeDataSepeda = {
   async getSepedaByNomorSeri(nomorSeri: string) {
     await delay(1000); // Mensimulasikan delay
 
-    // Mencari sepeda berdasarkan nomor seri
-    const sepeda = this.records.find(
-      (item) => item.nomorSeri === nomorSeri
-    );
+    const { data, error } = await supabase
+      .from('DataSepeda')
+      .select('*')
+      .eq('nomorSeri', nomorSeri)
+      .single();
 
-    if (!sepeda) {
+    if (error || !data) {
       return {
         success: false,
         message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
@@ -151,79 +124,78 @@ export const fakeDataSepeda = {
       success: true,
       time: currentTime,
       message: `Sepeda dengan nomor seri ${nomorSeri} ditemukan`,
-      sepeda
+      sepeda: data
     };
   },
 
   // Membuat data sepeda baru
   async createSepeda(data: Omit<DataSepeda, 'nomorSeri'> & { nomorSeri?: string }) {
     await delay(1000);
-    
-    // Generate nomor seri jika tidak disediakan
-    const nomorSeri = data.nomorSeri || `IPB${(this.records.length + 1).toString().padStart(3, '0')}`;
-    
-    const newSepeda: DataSepeda = {
-      nomorSeri,
-      merk: data.merk,
-      jenis: data.jenis,
-      status: data.status,
-      tanggalPerawatanTerakhir: data.tanggalPerawatanTerakhir,
-      deskripsi: data.deskripsi
-    };
 
-    this.records.push(newSepeda);
-    
+    const { data: newData, error } = await supabase
+      .from('DataSepeda')
+      .insert([data])
+      .select()
+      .single();
+
+    if (error) {
+      return {
+        success: false,
+        message: `Gagal menambahkan data sepeda: ${error.message}`
+      };
+    }
+
     return {
       success: true,
       message: 'Data sepeda berhasil ditambahkan',
-      sepeda: newSepeda
+      sepeda: newData
     };
   },
 
   // Memperbarui data sepeda
   async updateSepeda(nomorSeri: string, data: Partial<DataSepeda>) {
     await delay(1000);
-    
-    const index = this.records.findIndex(item => item.nomorSeri === nomorSeri);
-    if (index === -1) {
+
+    const { data: updatedData, error } = await supabase
+      .from('DataSepeda')
+      .update(data)
+      .eq('nomorSeri', nomorSeri)
+      .select()
+      .single();
+
+    if (error) {
       return {
         success: false,
-        message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
+        message: `Gagal memperbarui data sepeda: ${error.message}`
       };
     }
-
-    this.records[index] = {
-      ...this.records[index],
-      ...data
-    };
 
     return {
       success: true,
       message: 'Data sepeda berhasil diperbarui',
-      sepeda: this.records[index]
+      sepeda: updatedData
     };
   },
 
   // Menghapus data sepeda
   async deleteSepeda(nomorSeri: string) {
     await delay(1000);
-    
-    const index = this.records.findIndex(item => item.nomorSeri === nomorSeri);
-    if (index === -1) {
+
+    const { error } = await supabase
+      .from('DataSepeda')
+      .delete()
+      .eq('nomorSeri', nomorSeri);
+
+    if (error) {
       return {
         success: false,
-        message: `Sepeda dengan nomor seri ${nomorSeri} tidak ditemukan`
+        message: `Gagal menghapus data sepeda: ${error.message}`
       };
     }
 
-    this.records.splice(index, 1);
-    
     return {
       success: true,
       message: 'Data sepeda berhasil dihapus'
     };
   }
 };
-
-// Inisialisasi data contoh sepeda
-fakeDataSepeda.initialize();

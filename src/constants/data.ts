@@ -11,14 +11,14 @@ export type Sepeda = {
 
 //Info: The following data is used for the sidebar navigation
 export const navItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
+  // {
+  //   title: 'Dashboard',
+  //   url: '/dashboard/overview',
+  //   icon: 'dashboard',
+  //   isActive: false,
+  //   shortcut: ['d', 'd'],
+  //   items: [] // Empty array as there are no child items for Dashboard
+  // },
   {
     title: 'Data Sepeda',
     url: '/dashboard/data-sepeda',

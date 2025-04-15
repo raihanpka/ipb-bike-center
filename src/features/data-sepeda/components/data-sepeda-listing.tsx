@@ -1,5 +1,5 @@
 import { Sepeda } from '@/constants/data';
-import { fakeDataSepeda } from '@/constants/mock-api';
+import { ambilDataSepeda } from '@/constants/mock-api';
 import { searchParamsCache } from '@/lib/searchparams';
 import { DataSepedaTable } from './data-sepeda-tables';
 import { columns } from './data-sepeda-tables/columns';
@@ -21,7 +21,7 @@ export default async function DataSepedaListingPage({}: DataSepedaListingPage) {
     })
   };
 
-  const data = await fakeDataSepeda.getSepeda(filters);
+  const data = await ambilDataSepeda.getSepeda(filters);
   const totalItems = data.total_sepeda;
   const dataSepeda = data.sepeda as Sepeda[];
 
