@@ -5,13 +5,13 @@
 ## Tech Stack yang kami gunakan
 
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: on progress
+- **Database**: [Supabase](https://supabase.com)
 - **Authentication/User Management**: [Clerk](https://clerk.com)
 - **CSS Framework**: [TailwindCSS](https://tailwindcss.com/)
 - **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
 - **Cloud Deployment**: [Vercel](https://vercel.com/)
 - **Document Generation**: on progress
-- **Graph Visualization**: [ApexCharts](https://apexcharts.com/)
+- **Graph Visualization**: on progress
 
 ---
 
@@ -73,7 +73,8 @@ npm run dev
 
 ## Lisensi
 
-MIT License. Feel free to fork and build your own ✌️
+MIT License
+Feel free to fork and build your own ✌️
 
 ---
 
