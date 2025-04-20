@@ -30,7 +30,7 @@ export default async function Page(props: pageProps) {
         <div className='flex items-start justify-between'>
           <Heading
             title='Manajemen Data Sepeda'
-            description='Mengelola inventaris sepeda yang tersedia di gudang yang dikelola oleh DUI IPB'
+            description='Mengelola inventaris sepeda yang langsung dikelola oleh Direktorat Umum & Infrastruktur IPB University (DUI IPB)' 
           />
           <Link
             href='/dashboard/data-sepeda/baru'
