@@ -5,9 +5,9 @@ export function formatDate(
   if (!date) return '';
 
   try {
-    return new Intl.DateTimeFormat('en-US', {
-      month: opts.month ?? 'long',
+    return new Intl.DateTimeFormat('id-ID', {
       day: opts.day ?? 'numeric',
+      month: opts.month ?? 'long',
       year: opts.year ?? 'numeric',
       ...opts
     }).format(new Date(date));

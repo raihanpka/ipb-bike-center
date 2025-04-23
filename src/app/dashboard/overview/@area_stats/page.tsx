@@ -1,4 +1,4 @@
-import { delay } from '@/constants/mock-api';
+import { delay } from '@/constants/database-api';
 import { AreaGraph } from '@/features/overview/components/area-graph';
 
 export default async function AreaStats() {

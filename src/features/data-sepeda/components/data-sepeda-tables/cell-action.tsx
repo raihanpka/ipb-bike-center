@@ -38,7 +38,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         setOpen(false);
         router.refresh(); // Refresh halaman setelah penghapusan
       }
-
       window.location.href = '/dashboard/data-sepeda';
 
     } catch (err: any) {

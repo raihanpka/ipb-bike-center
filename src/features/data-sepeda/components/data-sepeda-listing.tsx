@@ -1,5 +1,5 @@
 import { Sepeda } from '@/constants/data';
-import { ambilDataSepeda } from '@/constants/mock-api';
+import { ambilDataSepeda } from '@/constants/database-api';
 import { searchParamsCache } from '@/lib/searchparams';
 import { DataSepedaTable } from './data-sepeda-tables';
 import { columns } from './data-sepeda-tables/columns';
@@ -8,9 +8,9 @@ type DataSepedaListingPage = {};
 
 export default async function DataSepedaListingPage({}: DataSepedaListingPage) {
   const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('name');
+  const search = searchParamsCache.get('nomorSeri');
   const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
+  const categories = searchParamsCache.get('jenis');
 
   const filters = {
     page,

@@ -1,4 +1,4 @@
-import { ambilDataSepeda, DataSepeda } from '@/constants/mock-api';
+import { ambilDataSepeda, DataSepeda } from '@/constants/database-api';
 import { notFound } from 'next/navigation';
 import DataSepedaForm from './data-sepeda-form';
 
@@ -18,7 +18,7 @@ export default async function DataSepedaViewPage({
     if (!sepeda) {
       notFound();
     }
-    pageTitle = `Edit Sepeda`;
+    pageTitle = `Edit Data Sepeda`;
   }
 
   return <DataSepedaForm initialData={sepeda} pageTitle={pageTitle} />;
