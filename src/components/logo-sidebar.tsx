@@ -1,9 +1,8 @@
 'use client';
 
-import { Bike } from 'lucide-react';
+import Image from 'next/image';
 import * as React from 'react';
 import Link from 'next/link';
-
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -21,7 +20,7 @@ export function LogoSidebar() {
         >
           <Link href='/' className='flex items-center'>
             <div className='bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
-              <Bike className='size-4' />
+              <Image src='/Logo.png' width='300' height='300' alt='IPB Bike Logo' />
             </div>
             <div className='flex flex-col gap-0.5 leading-none'>
               <span className='font-semibold'>IPB Bike Center</span>

@@ -16,8 +16,8 @@ export function SignUpViewPage() {
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <SignUp
-        afterSignUpUrl='/dashboard/data-sepeda'
-        redirectUrl='/dashboard/data-sepeda'
+        signInUrl='/auth/sign-in'
+        fallbackRedirectUrl='/dashboard/data-sepeda'
       />
     </div>
   );

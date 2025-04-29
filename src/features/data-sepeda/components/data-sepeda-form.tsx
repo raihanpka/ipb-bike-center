@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { supabase } from '@/lib/supabase';
+import { toast, Toaster } from 'sonner';
 
 const formSchema = z.object({
   nomorSeri: z.string().min(3, {
@@ -73,25 +74,41 @@ export default function DataSepedaForm({
           .eq('nomorSeri', initialData.nomorSeri);
 
         if (error) {
-          throw new Error(error.message);
+          throw toast.error(error.message, {
+            richColors: true,
+            position: 'top-center',
+          });
         }
-
-        alert('Data sepeda berhasil diperbarui!');
+        toast.success('Data sepeda berhasil diperbarui!', {
+          richColors: true,
+          position: 'top-center',
+        });
+        
       } else {
         const { error } = await supabase
           .from('DataSepeda')
           .insert(submissionData);
 
         if (error) {
-          throw new Error(error.message);
+          throw toast.error(error.message, {
+            richColors: true,
+            position: 'top-center',
+          });
         }
-
-        alert('Data sepeda baru berhasil ditambahkan!');
+        toast.success('Data sepeda baru berhasil ditambahkan!', {
+          richColors: true,
+          position: 'top-center',
+        });
       }
 
-      window.location.href = '/dashboard/data-sepeda';
+      setTimeout(() => {
+        window.location.href = '/dashboard/data-sepeda';
+      }, 1000);
     } catch (error) {
-      alert(`Gagal menyimpan data: ${error instanceof Error ? error.message : String(error)}`);
+      toast.error(`Gagal menyimpan data: ${error instanceof Error ? error.message : String(error)}`, {
+        richColors: true,
+        position: 'top-center',
+      });
     }
   }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { IconBrightness } from '@tabler/icons-react';
+import { IconSunFilled, IconMoonFilled } from '@tabler/icons-react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
@@ -32,6 +32,8 @@ export function ModeToggle() {
     [resolvedTheme, setTheme]
   );
 
+  const Icon = resolvedTheme === 'dark' ? IconSunFilled : IconMoonFilled;
+
   return (
     <Button
       variant='secondary'
@@ -39,7 +41,7 @@ export function ModeToggle() {
       className='group/toggle size-8'
       onClick={handleThemeToggle}
     >
-      <IconBrightness />
+      <Icon />
       <span className='sr-only'>Toggle theme</span>
     </Button>
   );
