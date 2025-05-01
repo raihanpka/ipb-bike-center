@@ -7,6 +7,6 @@ export default async function Dashboard() {
   if (!userId) {
     return redirect('/auth/sign-in');
   } else {
-    redirect('/dashboard/data-sepeda');
+    redirect('/dashboard/utama');
   }
 }

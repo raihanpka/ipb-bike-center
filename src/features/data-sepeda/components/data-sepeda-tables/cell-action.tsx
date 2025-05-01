@@ -12,7 +12,6 @@ import { Sepeda } from '@/constants/data';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
 import { supabase } from '@/lib/supabase';
 
 interface CellActionProps {
@@ -38,7 +37,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         setOpen(false);
         router.refresh(); // Refresh halaman setelah penghapusan
       }
-      window.location.href = '/dashboard/data-sepeda';
+      window.location.href = '/admin/data-sepeda';
 
     } catch (err: any) {
       alert('Unexpected error: ' + err.message);
@@ -66,7 +65,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Aksi</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/data-sepeda/${data.nomorSeri}`)}
+            onClick={() => router.push(`/admin/data-sepeda/${data.nomorSeri}`)}
           >
             <IconEdit className='mr-2 h-4 w-4' /> Perbarui
           </DropdownMenuItem>

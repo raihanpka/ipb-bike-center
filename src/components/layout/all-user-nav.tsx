@@ -13,6 +13,7 @@ import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { useClerk, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function UserNav() {
   const { user } = useUser();
@@ -23,12 +24,17 @@ export function UserNav() {
   const handleSignOut = async () => {
     try {
       setIsSigningOut(true);
-      console.log('Attempting sign out...');
       await signOut();
-      console.log('Sign out successful');
+      toast.success('Sign out successful', {
+        richColors: true,
+        position: 'bottom-center'
+      });
       router.push('/auth/sign-in');
     } catch (error) {
-      console.error('Sign out failed:', error);
+      toast.error(`Sign out failed: ${error instanceof Error ? error.message : String(error)}`, {
+        richColors: true,
+        position: 'bottom-center'
+      });
     } finally {
       setIsSigningOut(false);
     }

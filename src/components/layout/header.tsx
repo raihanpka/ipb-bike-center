@@ -2,7 +2,7 @@ import React from 'react';
 import { SidebarTrigger } from '../ui/sidebar';
 import { Separator } from '../ui/separator';
 import { Breadcrumbs } from '../breadcrumbs';
-import { UserNav } from './user-nav';
+import { UserNav } from './all-user-nav';
 import { ModeToggle } from './ThemeToggle/theme-toggle';
 
 export default function Header() {

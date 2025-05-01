@@ -24,7 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { supabase } from '@/lib/supabase';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   nomorSeri: z.string().min(3, {
@@ -102,7 +102,7 @@ export default function DataSepedaForm({
       }
 
       setTimeout(() => {
-        window.location.href = '/dashboard/data-sepeda';
+        window.location.href = '/admin/data-sepeda';
       }, 1000);
     } catch (error) {
       toast.error(`Gagal menyimpan data: ${error instanceof Error ? error.message : String(error)}`, {

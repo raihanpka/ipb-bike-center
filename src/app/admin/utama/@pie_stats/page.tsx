@@ -1,5 +1,5 @@
 import { delay } from '@/constants/database-api';
-import { PieGraph } from '@/features/overview/components/pie-graph';
+import { PieGraph } from '@/features/utama/components/pie-graph';
 
 export default async function Stats() {
   await delay(1000);

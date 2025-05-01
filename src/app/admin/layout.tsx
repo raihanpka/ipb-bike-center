@@ -1,4 +1,4 @@
-import AppSidebar from '@/components/layout/user-sidebar';
+import AppSidebar from '@/components/layout/admin-sidebar';
 import Header from '@/components/layout/header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import type { Metadata } from 'next';
@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'IPB Bike Center',
-  description: 'IPB Bike Center - Dashboard'
+  description: 'IPB Bike Center - Admin Dashboard'
 };
 
 export default async function DashboardLayout({

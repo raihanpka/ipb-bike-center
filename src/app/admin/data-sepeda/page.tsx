@@ -33,7 +33,7 @@ export default async function Page(props: pageProps) {
             description='Mengelola inventaris sepeda yang langsung dikelola oleh Direktorat Umum & Infrastruktur IPB University (DUI IPB)' 
           />
           <Link
-            href='/dashboard/data-sepeda/baru'
+            href='/admin/data-sepeda/baru'
             className={cn(buttonVariants(), 'text-xs md:text-sm')}
           >
             <IconPlus className='mr-2 h-4 w-4' /> Tambah Baru

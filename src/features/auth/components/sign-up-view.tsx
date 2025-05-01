@@ -8,16 +8,15 @@ export function SignUpViewPage() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      // Force full page reload to ensure proper auth state
-      window.location.href = '/dashboard/data-sepeda';
+      window.location.href = '/admin/utama';
     }
   }, [isLoaded, isSignedIn]);
 
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <SignUp
-        signInUrl='/auth/sign-in'
-        fallbackRedirectUrl='/dashboard/data-sepeda'
+        // signInUrl='/auth/sign-in'
+        // fallbackRedirectUrl='/dashboard/utama'
       />
     </div>
   );
