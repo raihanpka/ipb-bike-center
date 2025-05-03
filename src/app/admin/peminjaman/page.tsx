@@ -202,8 +202,8 @@ export default function KelolaPeminjamanPage() {
   )
 
   return (
-    <PageContainer scrollable={false}>
-    <div className="flex flex-1 flex-col space-y-4">
+  <PageContainer scrollable={false}>
+    <div className='flex flex-1 flex-col space-y-4'>
       <h1 className="text-3xl font-bold mb-6">Kelola Peminjaman Sepeda</h1>
 
       <div className="relative mb-6">
@@ -264,7 +264,6 @@ export default function KelolaPeminjamanPage() {
         </TabsContent>
       </Tabs>
     </div>
-    </PageContainer>
-    
+  </PageContainer>
   )
 }

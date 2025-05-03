@@ -5,7 +5,6 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
 
 type PeminjamanAccessVerificationProps = {
   peminjamanId: string
@@ -44,12 +43,7 @@ export function PeminjamanAccessVerification({ peminjamanId, children }: Peminja
   }, [user, isLoaded, peminjamanId])
 
   if (!isLoaded || loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-        <span>Loading...</span>
-      </div>
-    )
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 
   if (!hasAccess) {

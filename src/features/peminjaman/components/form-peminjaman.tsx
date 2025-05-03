@@ -109,10 +109,10 @@ export function FormPeminjaman() {
       const tanggalPengembalian = hitungTanggalPengembalian(tanggalPeminjaman, jangkaPeminjaman)
 
       // Upload foto peminjam
-      const fotoPeminjamUrl = await uploadFileToStorage(fotoPeminjam[0], "peminjaman", `peminjam/${user.id}`)
+      const fotoPeminjamUrl = await uploadFileToStorage(supabase, fotoPeminjam[0], "peminjaman", `peminjam/${user.id}`)
 
       // Upload foto KTM
-      const fotoKTMUrl = await uploadFileToStorage(fotoKTM[0], "peminjaman", `ktm/${user.id}`)
+      const fotoKTMUrl = await uploadFileToStorage(supabase, fotoKTM[0], "peminjaman", `ktm/${user.id}`)
 
       if (!fotoPeminjamUrl || !fotoKTMUrl) {
         throw new Error("Gagal mengupload foto")
@@ -142,7 +142,7 @@ export function FormPeminjaman() {
         statusId: 1, // 1 = Menunggu Persetujuan
         nomorTeleponAktif: nomorTelepon,
         fotoPeminjam: fotoPeminjamUrl,
-        fotoKTP: fotoKTMUrl,
+        fotoKTM: fotoKTMUrl,
       })
 
       if (error) throw error
@@ -166,7 +166,7 @@ export function FormPeminjaman() {
       setFotoKTM([])
 
       // Redirect ke halaman riwayat peminjaman
-      router.push("/peminjaman/riwayat")
+      router.push("/dashboard/peminjaman/riwayat")
     } catch (error: any) {
       toast.error(error.message || "Terjadi kesalahan saat mengajukan peminjaman")
     } finally {
@@ -192,7 +192,7 @@ export function FormPeminjaman() {
   }
 
   return (
-    <Card className="max-w-md mx-auto">
+    <Card className='mx-auto w-full'>
       <CardHeader>
         <CardTitle className="text-2xl">Pengajuan Peminjaman Sepeda</CardTitle>
         <CardDescription>Silakan isi form berikut untuk mengajukan peminjaman sepeda</CardDescription>
@@ -299,7 +299,7 @@ export function FormPeminjaman() {
               maxSize={1024 * 1024 * 2} // 2MB
               maxFiles={1}
             />
-            <p className="text-xs text-muted-foreground">Upload foto KTM Anda dengan informasi terlihat jelas</p>
+            <p className="text-xs text-muted-foreground mb-4">Upload foto KTM Anda dengan informasi terlihat jelas</p>
           </div>
         </CardContent>
         <CardFooter>

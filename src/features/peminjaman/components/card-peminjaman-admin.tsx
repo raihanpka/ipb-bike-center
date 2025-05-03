@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { id as LocaleId } from "date-fns/locale"
-import { Bike, Calendar, Clock, User, Check, X, Phone, Eye } from 'lucide-react'
-import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
+import { Bike, Calendar, Clock, User, Check, X, Phone, Eye } from "lucide-react"
 import { toast } from "sonner"
 import {
   Dialog,
@@ -18,10 +17,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import Image from "next/image"
+import { supabase } from "@/lib/supabase"
 
 type PeminjamanAdminCardProps = {
   id: string
-  userId: string // Ini adalah Supabase UUID, bukan Clerk ID
+  userId: string
   nomorSeriSepeda: string
   tanggalPeminjaman: string
   jangkaPeminjaman: string
@@ -41,6 +41,7 @@ type PeminjamanAdminCardProps = {
 
 export function CardPeminjamanAdmin({
   id,
+  userId,
   nomorSeriSepeda,
   tanggalPeminjaman,
   jangkaPeminjaman,
@@ -57,7 +58,6 @@ export function CardPeminjamanAdmin({
   fotoQRPengembalian,
   onStatusUpdate,
 }: PeminjamanAdminCardProps) {
-  const { supabase } = useSupabaseAuth()
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -194,7 +194,7 @@ export function CardPeminjamanAdmin({
           </div>
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">Jangka Waktu: {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}</span>
+            <span className="text-sm">Jangka Waktu: {jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}</span>
           </div>
           <div className="flex items-center">
             <Bike className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -287,7 +287,7 @@ export function CardPeminjamanAdmin({
                   </p>
                   <p className="text-sm">
                     <span className="font-medium">Jangka Waktu:</span>{" "}
-                    {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}
+                    {jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}
                   </p>
                   <p className="text-sm">
                     <span className="font-medium">Tanggal Pengembalian:</span>{" "}

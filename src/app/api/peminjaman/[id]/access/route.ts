@@ -3,44 +3,37 @@ import { auth } from "@clerk/nextjs/server"
 import { supabase } from "@/lib/supabase"
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { userId: clerkUserId } = await auth()
+  const { userId } = await auth()
   const peminjamanId = params.id
 
-  if (!clerkUserId) {
+  if (!userId) {
     return NextResponse.json({ hasAccess: false, error: "Unauthorized" }, { status: 401 })
   }
 
   try {
-    // Check if user is admin
-    const { data: userData, error: userError } = await supabase
-      .from("Users")
-      .select("role")
-      .eq("id", clerkUserId)
-      .maybeSingle()
+    // Cek apakah user adalah admin
+    const { data: userData, error: userError } = await supabase.from("Users").select("role").eq("id", userId).single()
 
-    if (userError) {
-      console.error("Error checking user role:", userError)
-    }
+    if (userError) throw userError
 
     const isAdmin = userData?.role === "admin"
 
-    // Check if peminjaman belongs to user
+    // Cek apakah peminjaman milik user atau user adalah admin
     const { data: peminjamanData, error: peminjamanError } = await supabase
       .from("Peminjaman")
       .select("userId")
       .eq("id", peminjamanId)
-      .maybeSingle()
+      .single()
 
     if (peminjamanError) {
       return NextResponse.json({ hasAccess: false, error: "Peminjaman not found" }, { status: 404 })
     }
 
-    // User has access if they're admin or the peminjaman belongs to them
-    const hasAccess = isAdmin || peminjamanData?.userId === clerkUserId
+    const hasAccess = isAdmin || peminjamanData.userId === userId
 
     return NextResponse.json({ hasAccess })
   } catch (error) {
     console.error("Error checking access:", error)
-    return NextResponse.json({ hasAccess: false, error: "Failed to verify access" }, { status: 500 })
+    return NextResponse.json({ hasAccess: false, error: "Server error" }, { status: 500 })
   }
 }

@@ -12,6 +12,9 @@ const nextConfig = {
         hostname: 'api.slingacademy.com',
         port: ''
       }
+    ],
+    domains: [
+      "kbyohjsdzfncnqnnzzwe.supabase.co"
     ]
   },
   webpack(config) {

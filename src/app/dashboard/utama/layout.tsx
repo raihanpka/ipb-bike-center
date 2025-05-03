@@ -15,6 +15,7 @@ import React from 'react';
 import Image from 'next/image';
 import { UserGreeting } from '@/features/utama/components/user-greeting';
 import { JumlahSepedaTersedia, JumlahSepedaDipinjam } from '@/features/utama/components/data-sepeda';
+import Link from 'next/link';
 
 export default function OverViewLayout({
   sales,
@@ -102,7 +103,9 @@ export default function OverViewLayout({
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline">Detail</Button>
-                <Button>Ajukan Peminjaman</Button>
+                <Button asChild>
+                  <Link href="/dashboard/peminjaman">Ajukan Peminjaman</Link>
+                </Button>
               </CardFooter>
             </Card>
           </div>

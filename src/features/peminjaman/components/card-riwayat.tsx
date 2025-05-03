@@ -176,7 +176,7 @@ export function CardRiwayat({
     setIsLoading(true)
     try {
       // Upload QR code ke storage
-      const qrCodeUrl = await uploadFileToStorage(file, "peminjaman", `qr/${user.id}`)
+      const qrCodeUrl = await uploadFileToStorage(supabase, file, "peminjaman", `qr/${user.id}`)
 
       if (!qrCodeUrl) {
         throw new Error("Gagal mengupload QR code")

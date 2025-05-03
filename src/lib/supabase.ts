@@ -1,22 +1,36 @@
-import { createClient } from "@supabase/supabase-js"
+// lib/supabase.ts
+import { createClient, SupabaseClient } from "@supabase/supabase-js"
 
-const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-if (!supabaseURL || !supabaseKey) {
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error("Supabase environment variables are not set")
 }
 
-export const supabase = createClient(
-  supabaseURL,
-  supabaseKey,
+// 1) Buat satu instance Supabase global
+export const supabase: SupabaseClient = createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
   {
+    // 2) Override fetch global — header Authorization akan di-attach
+    //    setiap kali fungsi `setAuthToken` dipanggil untuk setSession
     global: {
-      // set custom fetch untuk inject Authorization header
-      fetch: async (input, init) => {
-        // getToken hanya bisa di hook, jadi kita delegasikan di komponen
+      fetch: async (input, init = {}) => {
+        // Supabase client sendiri akan lakukan fetch di sini,
+        // dan jika kamu sudah memanggil `injectAuthToken`,
+        // maka header Authorization akan ter-set otomatis
         return fetch(input, init)
-      }
-    }
+      },
+    },
   }
 )
+
+/**
+ * Panggil ini setiap kali kamu memperoleh Clerk JWT di komponen
+ * (contoh: dari `useAuth().getToken()`), sebelum melakukan operasi Supabase.
+ */
+export function injectAuthToken(token: string) {
+  // Supabase v2: pakai setSession untuk inject access_token
+  supabase.auth.setSession({ access_token: token, refresh_token: "" })
+}

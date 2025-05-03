@@ -55,17 +55,6 @@ export function QRCodeGenerator({ defaultValue = "", showInput = true }: QRCodeG
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {showInput && (
-          <div className="space-y-2">
-            <Input
-              type="text"
-              placeholder="Masukkan nomor seri sepeda"
-              value={nomorSeri}
-              onChange={(e) => setNomorSeri(e.target.value)}
-            />
-          </div>
-        )}
-
         {nomorSeri ? (
           <div className="flex flex-col items-center p-4 bg-white rounded-md">
             <div className="text-center mb-2 font-medium text-primary">Nomor Seri: {nomorSeri}</div>

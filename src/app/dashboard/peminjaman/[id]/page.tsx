@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { id as LocaleId } from "date-fns/locale"
-import { Calendar, Clock, Bike } from 'lucide-react'
+import { Calendar, Clock, Bike } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 type PeminjamanDetailProps = {
@@ -122,7 +122,7 @@ export default function PeminjamanDetailPage({ params }: PeminjamanDetailProps) 
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
             <span className="text-sm">
-              Jangka Waktu: {peminjaman.jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}
+              Jangka Waktu: {peminjaman.jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}
             </span>
           </div>
           <div className="flex items-center">
