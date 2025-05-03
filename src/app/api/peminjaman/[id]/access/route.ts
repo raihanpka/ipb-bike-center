@@ -2,9 +2,12 @@ import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { supabase } from "@/lib/supabase"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  _request: NextRequest,
+  context: { params: { id: string } }
+) {
   const { userId } = await auth()
-  const peminjamanId = params.id
+  const peminjamanId = context.params.id
 
   if (!userId) {
     return NextResponse.json({ hasAccess: false, error: "Unauthorized" }, { status: 401 })
@@ -29,11 +32,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ hasAccess: false, error: "Peminjaman not found" }, { status: 404 })
     }
 
-    const hasAccess = isAdmin || peminjamanData.userId === userId
-
-    return NextResponse.json({ hasAccess })
   } catch (error) {
-    console.error("Error checking access:", error)
+    // Error checking access
     return NextResponse.json({ hasAccess: false, error: "Server error" }, { status: 500 })
   }
 }
