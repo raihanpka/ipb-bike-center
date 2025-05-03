@@ -8,6 +8,11 @@ import { Button } from '@/components/ui/button';
 
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleThemeToggle = React.useCallback(
     (e?: React.MouseEvent) => {
@@ -31,6 +36,8 @@ export function ModeToggle() {
     },
     [resolvedTheme, setTheme]
   );
+
+  if (!mounted) return null;
 
   const Icon = resolvedTheme === 'dark' ? IconSunFilled : IconMoonFilled;
 

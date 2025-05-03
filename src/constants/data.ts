@@ -15,14 +15,30 @@ export const adminNavItems: NavItem[] = [
     url: '/admin/utama',
     icon: 'dashboard',
     isActive: false,
-    shortcut: ['d', 'd'],
+    shortcut: ['u', 'u'],
     items: []
   },
   {
     title: 'Data Sepeda',
     url: '/admin/data-sepeda',
     icon: 'dataSepeda',
+    shortcut: ['s', 's'],
+    isActive: false,
+    items: [] // No child items
+  },
+  {
+    title: 'Peminjaman',
+    url: '/admin/peminjaman',
+    icon: 'peminjaman',
     shortcut: ['p', 'p'],
+    isActive: false,
+    items: [] // No child items
+  },
+  {
+    title: 'QR Generator',
+    url: '/admin/qr-generator',
+    icon: 'qrcode',
+    shortcut: ['q', 'q'],
     isActive: false,
     items: [] // No child items
   }
@@ -36,5 +52,30 @@ export const navItems: NavItem[] = [
     isActive: false,
     shortcut: ['d', 'd'],
     items: []
+  },
+  {
+    title: 'Peminjaman',
+    url: '/dashboard/peminjaman',
+    icon: 'peminjaman',
+    shortcut: ['p', 'p'],
+    isActive: true,
+    items: [
+      {
+        title: 'Form Peminjaman',
+        url: '/dashboard/peminjaman/',
+        icon: 'peminjaman',
+        isActive: false,
+        shortcut: ['p', 'p'],
+        items: [] // No child items
+      },
+      {
+        title: 'Riwayat Peminjaman',
+        url: '/dashboard/peminjaman/riwayat',
+        icon: 'history',
+        isActive: false,
+        shortcut: ['r', 'r'],
+        items: [] // No child items
+      }
+    ]
   }
 ];

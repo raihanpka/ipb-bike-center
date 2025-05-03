@@ -1,6 +1,7 @@
 import {
   IconAlertTriangle,
   IconArrowRight,
+  IconBikeFilled,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -9,6 +10,7 @@ import {
   IconFile,
   IconFileText,
   IconHelpCircle,
+  IconHistory,
   IconPhoto,
   IconDeviceLaptop,
   IconLayoutDashboard,
@@ -23,6 +25,7 @@ import {
   IconSettings,
   IconSun,
   IconTrash,
+  IconQrcode,
   IconBrandTwitter,
   IconUser,
   IconUserCircle,
@@ -64,5 +67,8 @@ export const Icons = {
   laptop: IconDeviceLaptop,
   github: IconBrandGithub,
   twitter: IconBrandTwitter,
-  check: IconCheck
+  check: IconCheck,
+  peminjaman: IconBikeFilled,
+  qrcode: IconQrcode,
+  history: IconHistory,
 };

@@ -1,5 +1,4 @@
 import PageContainer from '@/components/layout/page-container';
-import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardHeader,
@@ -17,15 +16,9 @@ import { UserGreeting } from '@/features/utama/components/user-greeting';
 import { JumlahSepedaTersedia, JumlahSepedaDipinjam } from '@/features/utama/components/data-sepeda';
 
 export default function OverViewLayout({
-  sales,
-  pie_stats,
   bar_stats,
-  area_stats
 }: {
-  sales: React.ReactNode;
-  pie_stats: React.ReactNode;
   bar_stats: React.ReactNode;
-  area_stats: React.ReactNode;
 }) {
   return (
     <PageContainer>
