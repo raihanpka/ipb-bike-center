@@ -238,8 +238,8 @@ export function FormPeminjaman() {
                 <Label htmlFor="Harian">Harian (1 Hari)</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="2bulan" id="2bulan" />
-                <Label htmlFor="2bulan">2 Bulan</Label>
+                <RadioGroupItem value="2 Bulan" id="2 Bulan" />
+                <Label htmlFor="2 Bulan">2 Bulan</Label>
               </div>
             </RadioGroup>
             <p className="text-sm text-muted-foreground mt-1">

@@ -194,7 +194,7 @@ export function CardPeminjamanAdmin({
           </div>
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">Jangka Waktu: {jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}</span>
+            <span className="text-sm">Jangka Waktu: {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}</span>
           </div>
           <div className="flex items-center">
             <Bike className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -287,7 +287,7 @@ export function CardPeminjamanAdmin({
                   </p>
                   <p className="text-sm">
                     <span className="font-medium">Jangka Waktu:</span>{" "}
-                    {jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}
+                    {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}
                   </p>
                   <p className="text-sm">
                     <span className="font-medium">Tanggal Pengembalian:</span>{" "}

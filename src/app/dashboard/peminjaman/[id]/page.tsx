@@ -10,13 +10,13 @@ import { Calendar, Clock, Bike } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 type PeminjamanDetailProps = {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function PeminjamanDetailPage({ params }: PeminjamanDetailProps) {
-  const { id } = params
+export default function PeminjamanDetailPage(params: PeminjamanDetailProps) {
+  const id  = params
   const { user, isLoaded } = useUser()
   const [peminjaman, setPeminjaman] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -122,7 +122,7 @@ export default function PeminjamanDetailPage({ params }: PeminjamanDetailProps) 
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
             <span className="text-sm">
-              Jangka Waktu: {peminjaman.jangkaPeminjaman === "harian" ? "1 Hari" : "2 Bulan"}
+              Jangka Waktu: {peminjaman.jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}
             </span>
           </div>
           <div className="flex items-center">
