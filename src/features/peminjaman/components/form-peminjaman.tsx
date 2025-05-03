@@ -73,7 +73,7 @@ export function FormPeminjaman() {
   // Hitung tanggal pengembalian berdasarkan jangka waktu
   const hitungTanggalPengembalian = useCallback((tanggal: Date, jangka: string) => {
     if (jangka === "Harian") {
-      return addDays(tanggal, 1)
+      return addDays(tanggal, 0)
     } else {
       return addMonths(tanggal, 2)
     }
