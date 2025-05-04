@@ -1,13 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { format, parseISO } from "date-fns"
 import { id as localeId } from "date-fns/locale"
@@ -18,6 +12,7 @@ import { Loader2, Camera } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FileUploader } from "@/components/file-uploader"
 import QrScanner from "qr-scanner"
+import { validateQRCode } from "@/lib/qr-crypto"
 
 interface CardRiwayatProps {
   id: string
@@ -50,7 +45,9 @@ export function CardRiwayat({
   const [isCameraActive, setIsCameraActive] = useState(false)
   const [scanner, setScanner] = useState<QrScanner>()
   const videoRef = useRef<HTMLVideoElement>(null)
+  const scannerBoxRef = useRef<HTMLDivElement>(null)
   const [qrFiles, setQrFiles] = useState<File[]>([])
+  const [scanResult, setScanResult] = useState<string | null>(null)
 
   // Format tanggal
   const formatTanggal = (tanggal: string) => {
@@ -95,6 +92,35 @@ export function CardRiwayat({
     }
   }
 
+  // Proses QR code yang terdeteksi
+  const processQRResult = async (result: string) => {
+    setIsLoading(true)
+    setScanResult(result)
+
+    try {
+      // Validasi QR code menggunakan fungsi decrypt
+      const isValid = await validateQRCode(result, nomorSeriSepeda)
+
+      if (isValid) {
+        // Update status peminjaman menjadi "Selesai" (statusId 4)
+        await supabase.from("Peminjaman").update({ statusId: 4 }).eq("id", id)
+        await supabase.from("DataSepeda").update({ status: "Tersedia" }).eq("nomorSeri", nomorSeriSepeda)
+
+        toast.success("Sepeda berhasil dikembalikan!")
+        stopCamera()
+        setIsQRDialogOpen(false)
+        onStatusUpdate()
+      } else {
+        toast.error("QR code tidak valid atau tidak sesuai dengan nomor seri sepeda.")
+      }
+    } catch (error) {
+      console.error("Error processing QR:", error)
+      toast.error("Gagal memproses QR code")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   // Mulai kamera & QR-scanning otomatis
   const startCamera = async () => {
     setIsCameraActive(true)
@@ -109,22 +135,18 @@ export function CardRiwayat({
     const qr = new QrScanner(
       videoEl,
       (result) => {
-        // result adalah string data QR
-        if (result.data === nomorSeriSepeda) {
-          toast.success("QR code sesuai nomor seri!")
-          qr.stop()
-          setScanner(undefined)
-          setIsQRDialogOpen(false)
-          onStatusUpdate()
-        } else {
-          toast.error("QR code tidak sesuai nomor seri.")
-        }
+        // Process the QR code result
+        processQRResult(result.data)
       },
       {
         preferredCamera: "environment",
-        maxScansPerSecond: 8,
-      }
+        maxScansPerSecond: 5,
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+        returnDetailedScanResult: true,
+      },
     )
+
     setScanner(qr)
     await qr.start()
   }
@@ -144,15 +166,14 @@ export function CardRiwayat({
     try {
       const file = files[0]
       // scanImage mengembalikan string atau null
-      const data = await QrScanner.scanImage(file)
-      if (data === nomorSeriSepeda) {
-        toast.success("QR code sesuai nomor seri!")
-        setIsQRDialogOpen(false)
-        onStatusUpdate()
+      const result = await QrScanner.scanImage(file)
+      if (result) {
+        processQRResult(result)
       } else {
-        toast.error("QR code tidak sesuai nomor seri.")
+        toast.error("Tidak dapat mendeteksi QR code dalam gambar.")
       }
-    } catch {
+    } catch (error) {
+      console.error("Error scanning image:", error)
       toast.error("Gagal memindai file QR.")
     } finally {
       setIsLoading(false)
@@ -161,7 +182,9 @@ export function CardRiwayat({
 
   const openDialog = () => {
     setIsQRDialogOpen(true)
+    setScanResult(null)
   }
+
   const closeDialog = () => {
     stopCamera()
     setIsQRDialogOpen(false)
@@ -172,7 +195,9 @@ export function CardRiwayat({
       <Card>
         <CardHeader>
           <div className="flex justify-between items-start">
-            <CardTitle>Sepeda {merkSepeda} {jenisSepeda}</CardTitle>
+            <CardTitle>
+              Sepeda {merkSepeda} {jenisSepeda}
+            </CardTitle>
             <Badge className={getStatusColor(statusId)}>{statusNama}</Badge>
           </div>
         </CardHeader>
@@ -197,9 +222,7 @@ export function CardRiwayat({
         <CardFooter className="flex gap-2">
           {statusId === 1 && (
             <Button variant="destructive" className="w-full" onClick={handleCancel} disabled={isLoading}>
-              {isLoading
-                ? <Loader2 className="animate-spin mr-2 h-4 w-4"/> 
-                : "Batalkan Peminjaman"}
+              {isLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : "Batalkan Peminjaman"}
             </Button>
           )}
           {statusId === 2 && (
@@ -222,28 +245,32 @@ export function CardRiwayat({
           <div className="flex flex-col gap-4">
             {isCameraActive ? (
               <div className="relative rounded-lg overflow-hidden border border-input">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  style={{ transform: "scaleX(-1)" }}
-                  className="w-full h-64 object-cover"
-                />
+                <video ref={videoRef} autoPlay playsInline muted className="w-full h-64 object-cover" />
+                {/* QR Scanner detection box */}
+                <div
+                  ref={scannerBoxRef}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 border-2 border-green-500 rounded-lg pointer-events-none"
+                >
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-green-500 rounded-tl"></div>
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-green-500 rounded-tr"></div>
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-green-500 rounded-bl"></div>
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-green-500 rounded-br"></div>
+                </div>
+
+                {/* Scanning indicator */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-center py-1 text-sm">
+                  {isLoading ? "Memproses QR..." : "Arahkan kamera ke QR Code"}
+                </div>
+
                 <div className="flex justify-end mt-2">
-                  <Button variant="outline" onClick={stopCamera}>
+                  <Button variant="outline" onClick={stopCamera} disabled={isLoading}>
                     Tutup Kamera
                   </Button>
                 </div>
               </div>
             ) : (
               <>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={startCamera}
-                  disabled={isLoading}
-                >
+                <Button variant="outline" className="w-full" onClick={startCamera} disabled={isLoading}>
                   <Camera className="mr-2 h-4 w-4" />
                   Buka Kamera
                 </Button>

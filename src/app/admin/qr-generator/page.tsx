@@ -112,7 +112,7 @@ export default function QRGeneratorPage() {
               )}
             </CardContent>
           </Card>
-          <QRCodeGenerator defaultValue={selectedNomorSeri} />
+          <QRCodeGenerator nomorSeri={selectedNomorSeri} />
         </div>
       </div>
     </PageContainer>

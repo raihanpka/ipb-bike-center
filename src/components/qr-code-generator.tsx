@@ -3,72 +3,105 @@
 import { useState, useEffect } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download } from "lucide-react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { encryptQRData } from "@/lib/qr-crypto"
+import { Loader2, Download } from "lucide-react"
 
-type QRCodeGeneratorProps = {
-  defaultValue?: string
-  showInput?: boolean
+interface QRCodeGeneratorProps {
+  nomorSeri: string
+  title?: string
 }
 
-export function QRCodeGenerator({ defaultValue = "", showInput = true }: QRCodeGeneratorProps) {
-  const [nomorSeri, setNomorSeri] = useState(defaultValue)
+export function QRCodeGenerator({ nomorSeri, title = "QR Code Sepeda" }: QRCodeGeneratorProps) {
+  const [qrValue, setQrValue] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Update nomorSeri ketika defaultValue berubah
   useEffect(() => {
-    if (defaultValue) {
-      setNomorSeri(defaultValue)
-    }
-  }, [defaultValue])
+    const generateEncryptedQR = async () => {
+      if (!nomorSeri) return
 
-  const handleDownload = () => {
-    const svg = document.getElementById("qr-code")
+      try {
+        setIsLoading(true)
+        // Encrypt the nomorSeri for the QR code
+        const encryptedValue = await encryptQRData(nomorSeri)
+        setQrValue(encryptedValue)
+      } catch (error) {
+        console.error("Error generating QR code:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    generateEncryptedQR()
+  }, [nomorSeri])
+
+  const downloadQRCode = () => {
+    const svg = document.getElementById("qr-code-svg")
     if (!svg) return
 
-    const svgData = new XMLSerializer().serializeToString(svg)
+    // Create a canvas element
     const canvas = document.createElement("canvas")
     const ctx = canvas.getContext("2d")
-    const img = new Image()
-    img.crossOrigin = "anonymous" // Menghindari CORS issues
-    img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx?.drawImage(img, 0, 0)
-      const pngFile = canvas.toDataURL("image/png")
+    if (!ctx) return
 
-      // Download file
+    // Set canvas dimensions (make it larger for better quality)
+    canvas.width = 1000
+    canvas.height = 1000
+
+    // Create an image from the SVG
+    const img = new Image()
+    const svgData = new XMLSerializer().serializeToString(svg)
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" })
+    const url = URL.createObjectURL(svgBlob)
+
+    img.onload = () => {
+      // Fill white background
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Draw the QR code
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+      // Convert to PNG and download
+      const pngUrl = canvas.toDataURL("image/png")
       const downloadLink = document.createElement("a")
+      downloadLink.href = pngUrl
       downloadLink.download = `qr-code-${nomorSeri}.png`
-      downloadLink.href = pngFile
+      document.body.appendChild(downloadLink)
       downloadLink.click()
+      document.body.removeChild(downloadLink)
+      URL.revokeObjectURL(url)
     }
-    img.src = "data:image/svg+xml;base64," + btoa(svgData)
+
+    img.src = url
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-sm mx-auto">
       <CardHeader>
-        <CardTitle>QR Code Sepeda</CardTitle>
-        <CardDescription>
-          {showInput ? "Buat QR Code untuk nomor seri sepeda" : "QR Code untuk nomor seri sepeda yang dipilih"}
-        </CardDescription>
+        <CardTitle className="text-center">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {nomorSeri ? (
-          <div className="flex flex-col items-center p-4 bg-white rounded-md">
-            <div className="text-center mb-2 font-medium text-primary">Nomor Seri: {nomorSeri}</div>
-            <QRCodeSVG id="qr-code" value={nomorSeri} size={200} />
+      <CardContent className="flex justify-center">
+        {isLoading ? (
+          <div className="h-64 w-64 flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : (
-          <div className="flex justify-center items-center h-[200px] bg-gray-100 rounded-md">
-            <p className="text-muted-foreground">QR Code akan muncul di sini</p>
+          <div className="bg-white p-4 rounded-lg">
+            <QRCodeSVG
+              id="qr-code-svg"
+              value={qrValue}
+              size={256}
+              level="H" // High error correction for better readability
+              includeMargin={true}
+            />
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex gap-2">
-        <Button onClick={handleDownload} disabled={!nomorSeri} className="w-full">
-          <Download className="mr-2 h-4 w-4" /> Download QR Code
+      <CardFooter>
+        <Button onClick={downloadQRCode} className="w-full" disabled={isLoading || !qrValue}>
+          <Download className="mr-2 h-4 w-4" />
+          Download QR Code
         </Button>
       </CardFooter>
     </Card>

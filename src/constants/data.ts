@@ -55,7 +55,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Peminjaman',
-    url: '/dashboard/peminjaman',
+    url: '#',
     icon: 'peminjaman',
     shortcut: ['p', 'p'],
     isActive: true,
@@ -64,7 +64,6 @@ export const navItems: NavItem[] = [
         title: 'Form Peminjaman',
         url: '/dashboard/peminjaman/',
         icon: 'peminjaman',
-        isActive: false,
         shortcut: ['p', 'p'],
         items: [] // No child items
       },
@@ -72,10 +71,17 @@ export const navItems: NavItem[] = [
         title: 'Riwayat Peminjaman',
         url: '/dashboard/peminjaman/riwayat',
         icon: 'history',
-        isActive: false,
         shortcut: ['r', 'r'],
         items: [] // No child items
       }
     ]
-  }
+  },
+  {
+    title: 'Tentang Kami',
+    url: '/dashboard/about',
+    icon: 'help',
+    isActive: false,
+    shortcut: ['d', 'd'],
+    items: []
+  },
 ];
