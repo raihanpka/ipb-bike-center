@@ -3,9 +3,7 @@ import type React from "react"
 import { UserGreeting } from "@/features/utama/components/user-greeting"
 import { LocationCard } from "@/features/utama/components/location-card"
 
-export default function OverViewLayout({
-}: {
-}) {
+export default function OverViewLayout() {
   return (
     <PageContainer>
       <div className="flex flex-1 flex-col space-y-2">
