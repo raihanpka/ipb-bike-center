@@ -137,15 +137,24 @@ export default function RiwayatPeminjamanPage() {
   )
 
   return (
-    <PageContainer scrollable={false}>
-      <div className='flex flex-1 flex-col space-y-4'>
-      <h1 className="text-3xl font-bold mb-6">Riwayat Peminjaman</h1>
+    <PageContainer scrollable={true}>
+      <div className="flex flex-1 flex-col space-y-4 px-2 sm:px-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center sm:text-left">
+        Riwayat Peminjaman
+      </h1>
 
-      <Tabs defaultValue="aktif" className="mb-6">
-        <TabsList>
-          <TabsTrigger value="aktif">Peminjaman Aktif</TabsTrigger>
-          <TabsTrigger value="selesai">Peminjaman Selesai</TabsTrigger>
+      
+      <Tabs defaultValue="aktif" className="mb-4 sm:mb-6 justify-center sm:justify-center">
+        <div className="flex justify-center sm:justify-start">
+        <TabsList className="flex flex-wrap sm:flex-wrap gap-2 justify-center sm:justify-center mb-8">
+          <TabsTrigger value="aktif">
+            Peminjaman Aktif ({peminjamanAktif.length})
+            </TabsTrigger>
+          <TabsTrigger value="selesai">
+            Peminjaman Selesai ({peminjamanSelesai.length})
+            </TabsTrigger>
         </TabsList>
+        </div>
         <TabsContent value="aktif">
           {peminjamanAktif.length === 0 ? (
             <div className="text-center py-10">

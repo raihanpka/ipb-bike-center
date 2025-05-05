@@ -26,6 +26,15 @@ interface LeafletMapComponentProps {
   }
 }
 
+import { useMapEvent } from "react-leaflet"
+
+function MapClickHandler() {
+  useMapEvent("click", () => {
+    window.open("https://maps.app.goo.gl/Y3j5fAAxf9g5s1yS9", "_blank")
+  })
+  return null
+}
+
 export function LeafletMapComponent({ className, location }: LeafletMapComponentProps) {
   const mapRef = useRef<L.Map>(null)
 
@@ -34,16 +43,17 @@ export function LeafletMapComponent({ className, location }: LeafletMapComponent
   }, [])
 
   return (
-    <div className={`${className || ""} overflow-hidden`}>
+    <div className={className} style={{ height: "100%", width: "100%" }}>
       <MapContainer
         center={[location.lat, location.lng]}
         zoom={17}
         style={{ height: "100%", width: "100%" }}
-        zoomControl={false}
+        zoomControl={true}
         attributionControl={false}
         // @ts-ignore - ref type issue with Leaflet
         ref={mapRef}
       >
+        <MapClickHandler />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -51,7 +61,7 @@ export function LeafletMapComponent({ className, location }: LeafletMapComponent
         <Marker position={[location.lat, location.lng]}>
           <Popup>
             <div className="p-1">
-              <h3 className="font-medium text-sm">IPB Bike Center</h3>
+              <h3 className="font-medium text-sm">IPB Bike Shelter</h3>
               <p className="text-xs">Kampus IPB Dramaga, Bogor</p>
             </div>
           </Popup>

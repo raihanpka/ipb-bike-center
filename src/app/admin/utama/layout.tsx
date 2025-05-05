@@ -9,7 +9,7 @@ import {
 import { IconCalendar, IconBike, IconUsers } from '@tabler/icons-react';
 import React from 'react';
 import { UserGreeting } from '@/features/utama/components/user-greeting';
-import { JumlahSepedaTersedia, JumlahSepedaDipinjam, JumlahPeminjamanBulanan } from '@/features/utama/components/data-sepeda';
+import { JumlahSepedaTersedia, JumlahSepedaDipinjam, JumlahPeminjamanBulanan, JumlahMenungguPersetujuan } from '@/features/utama/components/data-sepeda';
 
 function getCurrentMonthYearID() {
   const bulan = [
@@ -26,7 +26,7 @@ export default function OverViewLayout({
 }: {
 }) {
   return (
-    <PageContainer>
+    <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between space-y-2'>
           <UserGreeting />
@@ -43,7 +43,7 @@ export default function OverViewLayout({
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
               <div className="line-clamp-1 flex gap-2 font-muted-foreground">
                 <IconBike className="size-5" />
-                Kondisi sepeda yang layak pakai
+                Kondisi sepeda yang layak pakai dan tidak sedang dipinjam
               </div>
             </CardFooter>
           </Card>
@@ -59,6 +59,21 @@ export default function OverViewLayout({
               <div className="line-clamp-1 flex gap-2 font-muted-foreground">
                 <IconCalendar className="size-5" />
                 Per Bulan {getCurrentMonthYearID()}
+              </div>
+            </CardFooter>
+          </Card>
+          <Card className="@container/card">
+            <CardHeader>
+              <CardTitle>Jumlah Menunggu Persetujuan</CardTitle>
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                <JumlahMenungguPersetujuan />
+              </CardTitle>
+              <CardAction></CardAction>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className="line-clamp-1 flex gap-2 font-muted-foreground">
+                <IconUsers className="size-5" />
+                Total jumlah pengajuan peminjaman yang menunggu persetujuan
               </div>
             </CardFooter>
           </Card>

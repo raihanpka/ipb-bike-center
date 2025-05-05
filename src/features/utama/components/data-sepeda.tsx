@@ -15,16 +15,30 @@ export async function JumlahSepedaTersedia(): Promise<number> {
 
 export async function JumlahSepedaDipinjam(): Promise<number> {
   const { count, error } = await supabase
-    .from('DataSepeda')
+    .from('Peminjaman')
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'Dipinjam');
+    .eq('statusId', 2);
 
   if (error) {
-    throw new Error(`Gagal mendapatkan jumlah sepeda: ${error.message}`);
+    throw new Error(`Gagal mendapatkan peminjaman aktif: ${error.message}`);
   }
 
   return count || 0;
 }
+
+export async function JumlahMenungguPersetujuan(): Promise<number> {
+  const { count, error } = await supabase
+    .from('Peminjaman')
+    .select('*', { count: 'exact', head: true })
+    .eq('statusId', 1);
+
+  if (error) {
+    throw new Error(`Gagal mendapatkan status menunggu persetujuan: ${error.message}`);
+  }
+
+  return count || 0;
+}
+
 
 export async function JumlahPeminjamanBulanan(): Promise<number> {
   const now = new Date();
@@ -38,7 +52,8 @@ export async function JumlahPeminjamanBulanan(): Promise<number> {
     .from('Peminjaman')
     .select('*', { count: 'exact', head: true })
     .gte('tanggalPeminjaman', firstDay)
-    .lte('tanggalPeminjaman', lastDay);
+    .lte('tanggalPeminjaman', lastDay)
+    .not('statusId', 'in', '(5,3)');
 
   if (error) {
     throw new Error(`Gagal mendapatkan jumlah peminjaman bulanan: ${error.message}`);

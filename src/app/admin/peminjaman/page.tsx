@@ -202,66 +202,75 @@ export default function KelolaPeminjamanPage() {
   )
 
   return (
-  <PageContainer scrollable={false}>
-    <div className='flex flex-1 flex-col space-y-4'>
-      <h1 className="text-3xl font-bold mb-6">Kelola Peminjaman Sepeda</h1>
-
-      <div className="relative mb-6">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Cari berdasarkan nama, nomor seri, merk, jenis, atau nomor telepon..."
-          className="pl-8"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+  <PageContainer scrollable={true}>
+    <div className="flex flex-1 flex-col space-y-4 px-2 sm:px-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center sm:text-left">
+      Kelola Peminjaman Sepeda
+      </h1>
+      <div className="relative mb-4 sm:mb-6">
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Input
+        type="search"
+        placeholder="Cari berdasarkan nama, nomor seri, merk, jenis, atau nomor telepon..."
+        className="pl-8 py-2 text-sm"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       </div>
 
-      <Tabs defaultValue="menunggu" className="mb-6">
-        <TabsList>
-          <TabsTrigger value="menunggu">Menunggu Persetujuan ({peminjamanMenunggu.length})</TabsTrigger>
-          <TabsTrigger value="aktif">Peminjaman Aktif ({peminjamanAktif.length})</TabsTrigger>
-          <TabsTrigger value="selesai">Peminjaman Selesai ({peminjamanSelesai.length})</TabsTrigger>
-        </TabsList>
-        <TabsContent value="menunggu">
-          {peminjamanMenunggu.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">Tidak ada peminjaman yang menunggu persetujuan</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {peminjamanMenunggu.map((item) => (
-                <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-        <TabsContent value="aktif">
-          {peminjamanAktif.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">Tidak ada peminjaman aktif</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {peminjamanAktif.map((item) => (
-                <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-        <TabsContent value="selesai">
-          {peminjamanSelesai.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-muted-foreground">Tidak ada peminjaman selesai</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {peminjamanSelesai.map((item) => (
-                <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
+      <Tabs defaultValue="menunggu" className="mb-4 sm:mb-6">
+      <TabsList className="flex flex-wrap sm:flex-row gap-2 justify-center sm:justify-start mb-8">
+        <TabsTrigger value="menunggu">
+        Menunggu Persetujuan ({peminjamanMenunggu.length})
+        </TabsTrigger>
+        <TabsTrigger value="aktif">
+        Peminjaman Aktif ({peminjamanAktif.length})
+        </TabsTrigger>
+        <TabsTrigger value="selesai">
+        Peminjaman Selesai ({peminjamanSelesai.length})
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="menunggu">
+        {peminjamanMenunggu.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-muted-foreground">
+          Tidak ada peminjaman yang menunggu persetujuan
+          </p>
+        </div>
+        ) : (
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {peminjamanMenunggu.map((item) => (
+          <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
+          ))}
+        </div>
+        )}
+      </TabsContent>
+      <TabsContent value="aktif">
+        {peminjamanAktif.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-muted-foreground">Tidak ada peminjaman aktif</p>
+        </div>
+        ) : (
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {peminjamanAktif.map((item) => (
+          <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
+          ))}
+        </div>
+        )}
+      </TabsContent>
+      <TabsContent value="selesai">
+        {peminjamanSelesai.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-muted-foreground">Tidak ada peminjaman selesai</p>
+        </div>
+        ) : (
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {peminjamanSelesai.map((item) => (
+          <CardPeminjamanAdmin key={item.id} {...item} onStatusUpdate={fetchPeminjaman} />
+          ))}
+        </div>
+        )}
+      </TabsContent>
       </Tabs>
     </div>
   </PageContainer>

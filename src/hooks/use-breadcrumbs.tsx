@@ -15,6 +15,10 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
   '/admin/data-sepeda': [
     { title: 'Admin', link: '/admin' },
     { title: 'Data Sepeda', link: '/admin/data-sepeda' }
+  ],
+  '/admin/qr-generator': [
+    { title: 'Admin', link: '/admin' },
+    { title: 'QR Generator', link: '/admin/qr-generator' }
   ]
   // Add more custom mappings as needed
 };

@@ -259,7 +259,7 @@ export function FormPeminjaman() {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="Harian" id="Harian" />
-                <Label htmlFor="Harian">Harian (1 Hari)</Label>
+                <Label htmlFor="Harian">Harian</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="2 Bulan" id="2 Bulan" />
@@ -289,16 +289,23 @@ export function FormPeminjaman() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+            <div className="space-y-2">
             <Label htmlFor="nomorTelepon">Nomor Telepon Aktif</Label>
             <Input
               id="nomorTelepon"
               type="tel"
               value={nomorTelepon}
-              onChange={(e) => setNomorTelepon(e.target.value)}
+              onChange={(e) => {
+              const value = e.target.value
+              if (value === "" || /^[0-9]+$/.test(value)) {
+                setNomorTelepon(value)
+              } else {
+                toast.error("Nomor telepon hanya boleh berisi angka", { richColors: true })
+              }
+              }}
               placeholder="Masukkan nomor telepon aktif"
             />
-          </div>
+            </div>
 
           <div className="space-y-2">
             <Label>Foto Diri</Label>
@@ -310,7 +317,7 @@ export function FormPeminjaman() {
               maxSize={1024 * 1024 * 2} // 2MB
               maxFiles={1}
             />
-            <p className="text-xs text-muted-foreground">Upload foto diri Anda dengan wajah terlihat jelas</p>
+            <p className="text-xs text-muted-foreground">Upload foto diri Anda dalam kondisi terbaru dengan wajah terlihat jelas</p>
           </div>
 
           <div className="space-y-2">

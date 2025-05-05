@@ -74,11 +74,13 @@ export const ambilDataSepeda = {
   async getAll({
     nomorSeri,
     search,
-    jenis
+    jenis,
+    status
   }: {
     nomorSeri?: string;
     search?: string;
     jenis?: string[];
+    status?: string;
   }) {
     let query = supabase.from('DataSepeda').select('*');
 
@@ -90,6 +92,11 @@ export const ambilDataSepeda = {
     // Filter berdasarkan jenis jika ada
     if (jenis && jenis.length > 0) {
       query = query.in('jenis', jenis);
+    }
+
+    // Filter berdasarkan status
+    if (status) {
+      query = query.eq('jenis', status);
     }
 
     // Mengurutkan berdasarkan nomorSeri secara ascending
@@ -107,7 +114,7 @@ export const ambilDataSepeda = {
     // Fungsi pencarian
     if (search && transformedData.length > 0) {
       return matchSorter(transformedData, search, {
-        keys: ['merk', 'deskripsi', 'jenis']
+        keys: ['merk', 'jenis']
       });
     }
 
@@ -120,7 +127,8 @@ export const ambilDataSepeda = {
     limit = 10,
     jenis,
     search,
-    nomorSeri
+    nomorSeri,
+    status
   }: {
     page?: number;
     limit?: number;
@@ -134,7 +142,8 @@ export const ambilDataSepeda = {
     const allSepeda = await this.getAll({
       jenis: jenisSepedaArray,
       search,
-      nomorSeri
+      nomorSeri,
+      status
     });
     const totalSepeda = allSepeda.length;
 

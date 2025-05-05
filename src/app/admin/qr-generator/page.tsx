@@ -69,7 +69,7 @@ export default function QRGeneratorPage() {
   }
 
   return (
-    <PageContainer scrollable={false}>
+    <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>
         <h1 className="text-3xl font-bold mb-6">Generator QR Code Sepeda</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

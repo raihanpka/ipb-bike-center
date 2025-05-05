@@ -5,7 +5,7 @@ import { LocationCard } from "@/features/utama/components/location-card"
 
 export default function OverViewLayout() {
   return (
-    <PageContainer>
+    <PageContainer scrollable={true}>
       <div className="flex flex-1 flex-col space-y-2">
         <div className="flex items-center justify-between space-y-2">
           <UserGreeting />

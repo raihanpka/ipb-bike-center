@@ -4,6 +4,7 @@ import { useUser } from "@clerk/nextjs"
 import { FormPeminjaman } from "@/features/peminjaman/components/form-peminjaman"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import PageContainer from "@/components/layout/page-container"
 
 export default function PeminjamanPage() {
   const { user, isLoaded } = useUser()
@@ -24,10 +25,12 @@ export default function PeminjamanPage() {
   }
 
   return (
-    <div className="container mx-auto py-10 px-4 overflow-y-auto">
-      <div className="max-h-[calc(100vh-200px)] overflow-y-auto pb-6">
-        <FormPeminjaman />
+    <PageContainer scrollable={true}>
+      <div className="container mx-auto py-10 px-4 overflow-y-auto">
+        <div className="max-h-[calc(100vh-200px)] overflow-y-auto pb-6">
+          <FormPeminjaman />
+        </div>
       </div>
-    </div>
+    </PageContainer>
   )
 }

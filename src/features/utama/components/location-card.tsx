@@ -14,12 +14,13 @@ import React, { useEffect, useState } from "react";
 function isWithinOperationalHours(hours: string): boolean {
   const [start, end] = hours.split(" - ").map((time) => {
     const [hour, minute] = time.split(":").map(Number);
-    return new Date().setHours(hour, minute, 0, 0);
+    const now = new Date();
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0);
+    return date.getTime();
   });
 
   const now = new Date();
-  const nowInGMT7 = new Date(now.getTime() + 7 * 60 * 60 * 1000); // Convert to GMT+7
-  const currentTime = nowInGMT7.getTime();
+  const currentTime = now.getTime();
 
   return currentTime >= start && currentTime <= end;
 }

@@ -4,13 +4,14 @@ import { Sepeda } from '@/constants/data';
 import { ColumnDef } from '@tanstack/react-table';
 import { CheckCircle2, Text, XCircle } from 'lucide-react';
 import { CellAction } from './cell-action';
-import { CATEGORY_OPTIONS } from './options';
+import { CATEGORY_OPTIONS, STATUS_OPTIONS } from './options';
 
 export const columns: ColumnDef<Sepeda>[] = [
   {
     id: 'nomorSeri',
     accessorKey: 'nomorSeri',
     header: 'Nomor Seri',
+    cell: ({ cell }) => <div>{cell.getValue<Sepeda['nomorSeri']>()}</div>,
     meta: {
       label: 'Nomor Seri',
       placeholder: 'Mencari Nomor Seri...',
@@ -34,7 +35,7 @@ export const columns: ColumnDef<Sepeda>[] = [
         </Badge>
       );
     },
-    enableColumnFilter: true,
+    enableColumnFilter: false,
     meta: {
       label: 'Jenis Sepeda',
       variant: 'multiSelect',
@@ -51,8 +52,22 @@ export const columns: ColumnDef<Sepeda>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: ({ cell }) => {
+      const status = cell.getValue<Sepeda['status']>();
+      const Icon = status === 'active' ? CheckCircle2 : XCircle;
+
+      return (
+        <Badge variant='outline' className='capitalize'>
+          <Icon />
+          {status}
+        </Badge>
+      );
+    },
+    enableColumnFilter: true,
     meta: {
-      label: 'Status',
+      label: 'Status Sepeda',
+      variant: 'select',
+      options: STATUS_OPTIONS
     }
   },
   {
