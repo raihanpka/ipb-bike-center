@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { FileUploader } from "@/components/file-uploader"
 import QrScanner from "qr-scanner"
 import { validateQRCode } from "@/lib/qr-crypto"
+import { deleteFileFromStorage } from "@/lib/upload-utils"
+import { useUser } from "@clerk/nextjs"
 
 interface CardRiwayatProps {
   id: string
@@ -39,16 +41,17 @@ export function CardRiwayat({
   merkSepeda,
   onStatusUpdate,
 }: CardRiwayatProps) {
+  const { user } = useUser()
+
   const [isLoading, setIsLoading] = useState(false)
   const { supabase } = useSupabaseAuth()
   const [isQRDialogOpen, setIsQRDialogOpen] = useState(false)
   const [isCameraActive, setIsCameraActive] = useState(false)
   const [scanner, setScanner] = useState<QrScanner>()
   const videoRef = useRef<HTMLVideoElement>(null)
-  const scannerBoxRef = useRef<HTMLDivElement>(null)
   const [qrFiles, setQrFiles] = useState<File[]>([])
   const [scanResult, setScanResult] = useState<string | null>(null)
-
+  
   // Format tanggal
   const formatTanggal = (tanggal: string) => {
     try {
@@ -76,13 +79,19 @@ export function CardRiwayat({
     }
   }
 
-  // Batalkan peminjaman (tetap pakai supabase)
+  // Batalkan peminjaman 
   const handleCancel = async () => {
     if (!confirm("Apakah Anda yakin ingin membatalkan peminjaman ini?")) return
     setIsLoading(true)
     try {
       await supabase.from("Peminjaman").update({ statusId: 5 }).eq("id", id)
       await supabase.from("DataSepeda").update({ status: "Tersedia" }).eq("nomorSeri", nomorSeriSepeda)
+      if (user) {
+        await deleteFileFromStorage(supabase, "peminjaman", `ktm/${user.id}/`)
+        await deleteFileFromStorage(supabase, "peminjaman", `peminjam/${user.id}/`)
+      } else {
+        throw new Error("User is not authenticated.")
+      }
       toast.success("Peminjaman berhasil dibatalkan", {richColors: true})
       onStatusUpdate()
     } catch {
@@ -105,6 +114,13 @@ export function CardRiwayat({
         // Update status peminjaman menjadi "Selesai" (statusId 4)
         await supabase.from("Peminjaman").update({ statusId: 4 }).eq("id", id)
         await supabase.from("DataSepeda").update({ status: "Tersedia" }).eq("nomorSeri", nomorSeriSepeda)
+
+        if (user) {
+          await deleteFileFromStorage(supabase, "peminjaman", `ktm/${user.id}`)
+          await deleteFileFromStorage(supabase, "peminjaman", `peminjam/${user.id}`)
+        } else {
+          throw new Error("User is not authenticated.")
+        }
 
         toast.success("Sepeda berhasil dikembalikan!", {richColors: true})
         stopCamera()
