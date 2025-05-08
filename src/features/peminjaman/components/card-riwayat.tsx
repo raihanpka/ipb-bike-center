@@ -90,6 +90,7 @@ export function CardRiwayat({
       if (user) {
         await deleteFileFromStorage(supabase, "peminjaman", `ktm/${user.id}/`)
         await deleteFileFromStorage(supabase, "peminjaman", `peminjam/${user.id}/`)
+        await deleteFileFromStorage(supabase, "peminjaman", `surat/${user.id}/`)
       } else {
         throw new Error("User is not authenticated.")
       }
@@ -119,6 +120,7 @@ export function CardRiwayat({
         if (user) {
           await deleteFileFromStorage(supabase, "peminjaman", `ktm/${user.id}`)
           await deleteFileFromStorage(supabase, "peminjaman", `peminjam/${user.id}`)
+          await deleteFileFromStorage(supabase, "peminjaman", `surat/${user.id}/`)
         } else {
           throw new Error("User is not authenticated.")
         }

@@ -36,11 +36,11 @@ export function ReportTable({ data }: { data: ReportData[] }) {
         <TableHeader>
           <TableRow>
             <TableHead>Nama Peminjam</TableHead>
-            <TableHead>Sepeda</TableHead>
-            <TableHead>Tanggal Pinjam</TableHead>
-            <TableHead>Tanggal Kembali</TableHead>
+            <TableHead className="hidden sm:table-cell">Sepeda</TableHead>
+            <TableHead className="hidden md:table-cell">Tanggal Pinjam</TableHead>
+            <TableHead className="hidden md:table-cell">Tanggal Kembali</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Durasi</TableHead>
+            <TableHead className="hidden sm:table-cell">Durasi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,18 +53,28 @@ export function ReportTable({ data }: { data: ReportData[] }) {
           ) : (
             data.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.Users?.nama || "N/A"}</TableCell>
-                <TableCell>
-                  {item.DataSepeda?.merk || "N/A"} ({item.DataSepeda?.jenis || "N/A"}) ({item.DataSepeda?.nomorSeri || "N/A"})
+                <TableCell className="font-medium">
+                  {item.Users?.nama || "N/A"}
+                  <div className="sm:hidden text-xs text-muted-foreground mt-1">
+                    {item.DataSepeda?.merk || "N/A"} - {formatDate(item.tanggalPeminjaman)}
+                  </div>
                 </TableCell>
-                <TableCell>{formatDate(item.tanggalPeminjaman)}</TableCell>
-                <TableCell>{formatDate(item.tanggalPengembalian)}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <div className="truncate max-w-[150px] md:max-w-none">
+                    {item.DataSepeda?.merk || "N/A"} ({item.DataSepeda?.jenis || "N/A"})
+                    <div className="md:hidden text-xs text-muted-foreground">
+                      {item.DataSepeda?.nomorSeri || "N/A"}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">{formatDate(item.tanggalPeminjaman)}</TableCell>
+                <TableCell className="hidden md:table-cell">{formatDate(item.tanggalPengembalian)}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(item.StatusPeminjaman?.nama)}>
                     {item.StatusPeminjaman?.nama || "N/A"}
                   </Badge>
                 </TableCell>
-                <TableCell>{item.jangkaPeminjaman}</TableCell>
+                <TableCell className="hidden sm:table-cell">{item.jangkaPeminjaman}</TableCell>
               </TableRow>
             ))
           )}

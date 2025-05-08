@@ -93,7 +93,7 @@ export interface Database {
           nomorTeleponAktif: string
           fotoPeminjam: string | null
           fotoKTM: string | null
-          fotoQRPengembalian: string | null
+          suratPeminjaman: string | null
           createdAt: string
           updatedAt: string
         }
@@ -108,7 +108,7 @@ export interface Database {
           nomorTeleponAktif: string
           fotoPeminjam?: string | null
           fotoKTM?: string | null
-          fotoQRPengembalian?: string | null
+          suratPeminjaman?: string | null
           createdAt?: string
           updatedAt?: string
         }
@@ -123,7 +123,7 @@ export interface Database {
           nomorTeleponAktif?: string
           fotoPeminjam?: string | null
           fotoKTM?: string | null
-          fotoQRPengembalian?: string | null
+          suratPeminjaman?: string | null
           createdAt?: string
           updatedAt?: string
         }

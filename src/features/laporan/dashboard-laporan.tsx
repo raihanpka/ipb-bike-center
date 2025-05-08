@@ -76,7 +76,7 @@ export default function ReportDashboard() {
           Users: Array.isArray(item.Users) ? item.Users[0] : item.Users,
           DataSepeda: Array.isArray(item.DataSepeda) ? item.DataSepeda[0] : item.DataSepeda,
           StatusPeminjaman: Array.isArray(item.StatusPeminjaman) ? item.StatusPeminjaman[0] : item.StatusPeminjaman,
-        }))
+        })),
       )
       setIsLoading(false)
     }
@@ -101,39 +101,45 @@ export default function ReportDashboard() {
     <div className="space-y-6">
       {isLoading ? (
         <div className="space-y-4">
-          <Skeleton className="h-[200px] w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Skeleton className="h-[120px]" />
-            <Skeleton className="h-[120px]" />
-            <Skeleton className="h-[120px]" />
+          <Skeleton className="h-[120px] sm:h-[200px] w-full" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Skeleton className="h-[100px] sm:h-[120px]" />
+            <Skeleton className="h-[100px] sm:h-[120px]" />
+            <Skeleton className="h-[100px] sm:h-[120px]" />
           </div>
         </div>
       ) : (
         <>
           <ReportFilter onFilterChange={handleFilterChange} selectedMonth={selectedMonth} selectedYear={selectedYear} />
 
-          <ReportSummaryCards data={filteredData.map(item => ({ ...item, userId: item.userId.toString() }))} />
+          <ReportSummaryCards data={filteredData.map((item) => ({ ...item, userId: item.userId.toString() }))} />
 
           <Tabs defaultValue="table" className="w-full">
-            <TabsList>
-              <TabsTrigger value="table">Tabel Data</TabsTrigger>
-              <TabsTrigger value="download">Unduh Laporan</TabsTrigger>
+            <TabsList className="w-full mb-4">
+              <TabsTrigger value="table" className="flex-1">
+                Tabel Data
+              </TabsTrigger>
+              <TabsTrigger value="download" className="flex-1">
+                Unduh Laporan
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="table">
-              <ReportTable data={filteredData.map(item => ({
-                ...item,
-                id: item.id.toString(),
-                tanggalPengembalian: item.tanggalPengembalian || "",
-                jangkaPeminjaman: item.jangkaPeminjaman.toString(),
-                DataSepeda: {
-                  ...item.DataSepeda,
-                  nomorSeri: item.DataSepeda?.nomorSeri ?? item.nomorSeriSepeda ?? "",
-                },
-              }))} />
+            <TabsContent value="table" className="mt-0">
+              <ReportTable
+                data={filteredData.map((item) => ({
+                  ...item,
+                  id: item.id.toString(),
+                  tanggalPengembalian: item.tanggalPengembalian || "",
+                  jangkaPeminjaman: item.jangkaPeminjaman.toString(),
+                  DataSepeda: {
+                    ...item.DataSepeda,
+                    nomorSeri: item.DataSepeda?.nomorSeri ?? item.nomorSeriSepeda ?? "",
+                  },
+                }))}
+              />
             </TabsContent>
-            <TabsContent value="download">
+            <TabsContent value="download" className="mt-0">
               <ReportDownload
-                data={filteredData.map(item => ({
+                data={filteredData.map((item) => ({
                   ...item,
                   userId: item.userId.toString(),
                   tanggalPengembalian: item.tanggalPengembalian || "",

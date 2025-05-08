@@ -35,7 +35,7 @@ type PeminjamanAdminCardProps = {
   nomorTeleponAktif: string
   fotoPeminjam: string | null
   fotoKTM: string | null
-  fotoQRPengembalian: string | null
+  suratPeminjaman: string | null
   onStatusUpdate: () => void
 }
 
@@ -55,7 +55,7 @@ export function CardPeminjamanAdmin({
   nomorTeleponAktif,
   fotoPeminjam,
   fotoKTM,
-  fotoQRPengembalian,
+  suratPeminjaman,
   onStatusUpdate,
 }: PeminjamanAdminCardProps) {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false)
@@ -335,18 +335,19 @@ export function CardPeminjamanAdmin({
               <p className="text-sm text-muted-foreground">Tidak ada foto KTM</p>
             )}
           </div>
-          {fotoQRPengembalian && (
+          {suratPeminjaman && (
             <div>
-              <h3 className="font-medium mb-2">Foto QR Pengembalian</h3>
-              <div className="border rounded-md overflow-hidden">
-                <Image
-            src={fotoQRPengembalian || "/placeholder.svg"}
-            alt="Foto QR Pengembalian"
-            width={300}
-            height={300}
-            className="object-cover"
-                />
-              </div>
+              <h3 className="font-medium mb-2">Surat Peminjaman</h3>
+              <Button
+              asChild
+              className="w-full"
+              variant="outline"
+              size="sm"
+              >
+              <a href={suratPeminjaman} target="_blank" rel="noopener noreferrer" download>
+                Unduh Surat Peminjaman
+              </a>
+              </Button>
             </div>
           )}
               </div>

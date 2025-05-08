@@ -10,13 +10,13 @@ import { formatDate } from "@/lib/format"
 import { toast } from "sonner"
 
 interface ReportData {
-  userId: string;
-  Users?: { nama: string };
-  DataSepeda?: { merk: string; jenis: string, nomorSeri: string };
-  tanggalPeminjaman: string;
-  tanggalPengembalian: string;
-  StatusPeminjaman?: { nama: string };
-  jangkaPeminjaman: number;
+  userId: string
+  Users?: { nama: string }
+  DataSepeda?: { merk: string; jenis: string; nomorSeri: string }
+  tanggalPeminjaman: string
+  tanggalPengembalian: string
+  StatusPeminjaman?: { nama: string }
+  jangkaPeminjaman: number
 }
 
 export function ReportDownload({ data, month, year }: { data: ReportData[]; month: number; year: number }) {
@@ -114,15 +114,15 @@ export function ReportDownload({ data, month, year }: { data: ReportData[]; mont
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="px-4 pt-4 pb-2 sm:px-6 sm:pt-6 sm:pb-4">
         <CardTitle>Unduh Laporan PDF</CardTitle>
         <CardDescription>
           Unduh laporan peminjaman sepeda dalam format PDF untuk periode {monthNames[month - 1]} {year}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 py-2 sm:px-6 sm:py-4">
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="border rounded-md p-4">
               <p className="text-sm font-medium">Total Peminjaman</p>
               <p className="text-2xl font-bold">{data.length}</p>
@@ -135,9 +135,9 @@ export function ReportDownload({ data, month, year }: { data: ReportData[]; mont
             </div>
           </div>
 
-          <div className="border rounded-md p-4">
-            <p className="text-sm font-medium mb-2">Informasi yang akan diunduh:</p>
-            <ul className="list-disc list-inside text-sm space-y-1">
+          <div className="border rounded-md p-3 sm:p-4">
+            <p className="text-sm font-medium mb-1 sm:mb-2">Informasi yang akan diunduh:</p>
+            <ul className="list-disc list-inside text-xs sm:text-sm space-y-0.5 sm:space-y-1">
               <li>Data peminjam (nama)</li>
               <li>Data sepeda (merk dan jenis)</li>
               <li>Tanggal peminjaman dan pengembalian</li>
@@ -148,7 +148,7 @@ export function ReportDownload({ data, month, year }: { data: ReportData[]; mont
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="px-4 pb-4 pt-2 sm:px-6 sm:pb-6 sm:pt-4">
         <Button onClick={generatePDF} disabled={isGenerating || data.length === 0} className="w-full">
           {isGenerating ? (
             <>

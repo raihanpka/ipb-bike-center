@@ -34,6 +34,7 @@ export function FormPeminjaman() {
   const [nomorTelepon, setNomorTelepon] = useState<string>("")
   const [fotoPeminjam, setFotoPeminjam] = useState<File[]>([])
   const [fotoKTM, setFotoKTM] = useState<File[]>([])
+  const [suratPeminjaman, setSuratPeminjaman] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [jenisSepedaOptions, setJenisSepedaOptions] = useState<JenisSepeda[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -114,8 +115,19 @@ export function FormPeminjaman() {
       // Upload foto KTM
       const fotoKTMUrl = await uploadFileToStorage(supabase, fotoKTM[0], "peminjaman", `ktm/${user.id}`)
 
+      // Upload surat peminjaman hanya jika jangkaPeminjaman adalah "2 Bulan"
+      let suratPeminjamanUrl = null
+      if (jangkaPeminjaman === "2 Bulan") {
+        if (suratPeminjaman.length === 0) {
+          toast.error("Mohon upload surat peminjaman untuk jangka 2 Bulan", { richColors: true })
+          setIsSubmitting(false)
+          return
+        }
+        suratPeminjamanUrl = await uploadFileToStorage(supabase, suratPeminjaman[0], "peminjaman", `surat/${user.id}`)
+      }
+
       if (!fotoPeminjamUrl || !fotoKTMUrl) {
-        throw new Error("Gagal mengupload foto")
+        toast.error("Gagal mengupload file, silakan coba lagi", {richColors: true})
       }
 
       // Cari sepeda yang tersedia dengan jenis yang dipilih
@@ -151,7 +163,6 @@ export function FormPeminjaman() {
               role: user.publicMetadata?.role || "user",
             })
           if (insertError) {
-            console.error("Error inserting new user:", insertError)
             throw insertError
           }
       }
@@ -167,6 +178,7 @@ export function FormPeminjaman() {
         nomorTeleponAktif: nomorTelepon,
         fotoPeminjam: fotoPeminjamUrl,
         fotoKTM: fotoKTMUrl,
+        suratPeminjaman: suratPeminjamanUrl
       })
 
       if (error) throw error
@@ -188,6 +200,7 @@ export function FormPeminjaman() {
       setNomorTelepon("")
       setFotoPeminjam([])
       setFotoKTM([])
+      setSuratPeminjaman([])
 
       // Redirect ke halaman riwayat peminjaman
       router.push("/dashboard/peminjaman/riwayat")
@@ -198,7 +211,7 @@ export function FormPeminjaman() {
     }
   }
 
-  const handleFotoUpload = async (files: File[]) => {
+  const handleUpload = async (files: File[]) => {
     return Promise.resolve()
   }
 
@@ -289,7 +302,6 @@ export function FormPeminjaman() {
               </SelectContent>
             </Select>
           </div>
-
             <div className="space-y-2">
             <Label htmlFor="nomorTelepon">Nomor Telepon Aktif</Label>
             <Input
@@ -308,31 +320,54 @@ export function FormPeminjaman() {
             />
             </div>
 
-          <div className="space-y-2">
-            <Label>Foto Diri</Label>
-            <FileUploader
-              value={fotoPeminjam}
-              onValueChange={setFotoPeminjam}
-              onUpload={handleFotoUpload}
-              accept={{ "image/*": [] }}
-              maxSize={1024 * 1024 * 2} // 2MB
-              maxFiles={1}
-            />
-            <p className="text-xs text-muted-foreground">Upload foto diri Anda dalam kondisi terbaru dengan wajah terlihat jelas</p>
-          </div>
+            <div className="space-y-2">
+              <Label>Foto Diri</Label>
+              <FileUploader
+                value={fotoPeminjam}
+                onValueChange={setFotoPeminjam}
+                onUpload={handleUpload}
+                accept={{ "image/*": [] }}
+                maxSize={1024 * 1024 * 2} // 2MB
+                maxFiles={1}
+              />
+              <p className="text-xs text-muted-foreground">Upload foto diri Anda dalam kondisi terbaru dengan wajah terlihat jelas</p>
+            </div>
 
-          <div className="space-y-2">
-            <Label>Foto KTM</Label>
-            <FileUploader
-              value={fotoKTM}
-              onValueChange={setFotoKTM}
-              onUpload={handleFotoUpload}
-              accept={{ "image/*": [] }}
-              maxSize={1024 * 1024 * 2} // 2MB
-              maxFiles={1}
-            />
-            <p className="text-xs text-muted-foreground mb-4">Upload foto KTM Anda dengan informasi terlihat jelas</p>
-          </div>
+            <div className="space-y-2">
+              <Label>Foto KTM</Label>
+              <FileUploader
+                value={fotoKTM}
+                onValueChange={setFotoKTM}
+                onUpload={handleUpload}
+                accept={{ "image/*": [] }}
+                maxSize={1024 * 1024 * 2} // 2MB
+                maxFiles={1}
+              />
+              <p className="text-xs text-muted-foreground mb-4">Upload foto KTM Anda dengan informasi terlihat jelas</p>
+            </div>
+
+          {jangkaPeminjaman === "2 Bulan" && (
+            <div className="space-y-2">
+              <Label>Surat Peminjaman</Label>
+                <FileUploader
+                value={suratPeminjaman}
+                onValueChange={setSuratPeminjaman}
+                onUpload={handleUpload}
+                accept={{
+                  "application/pdf": [],
+                  "application/msword": [],
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": []
+                }}
+                maxSize={1024 * 1024 * 2} // 2MB
+                maxFiles={1}
+              />
+              <p className="text-xs text-muted-foreground mb-2">Upload surat peminjaman Anda yang sudah diberi materai</p>
+              <p className="text-xs text-muted-foreground mb-2">
+                Jika belum punya template nya, download <a href="https://kbyohjsdzfncnqnnzzwe.supabase.co/storage/v1/object/public/peminjaman/Template_Surat_Peminjaman_2025.docx" 
+                target="_blank" rel="noopener noreferrer" className="text-blue-600 underline" download>di sini</a>
+              </p>
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full" disabled={isSubmitting}>

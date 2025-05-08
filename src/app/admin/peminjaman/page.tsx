@@ -26,7 +26,7 @@ type Peminjaman = {
   nomorTeleponAktif: string
   fotoPeminjam: string | null
   fotoKTM: string | null
-  fotoQRPengembalian: string | null
+  suratPeminjaman: string | null
 }
 
 export default function KelolaPeminjamanPage() {
@@ -66,7 +66,7 @@ export default function KelolaPeminjamanPage() {
           nomorTeleponAktif,
           fotoPeminjam,
           fotoKTM,
-          fotoQRPengembalian
+          suratPeminjaman
         `)
         .order("createdAt", { ascending: false })
 

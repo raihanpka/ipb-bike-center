@@ -67,7 +67,7 @@ CREATE TABLE public."Peminjaman" (
   "nomorTeleponAktif" character varying NOT NULL,
   "fotoPeminjam" character varying NULL,
   "fotoKTM" character varying NULL,
-  "fotoQRPengembalian" character varying NULL,
+  "suratPeminjaman" character varying NULL,
   "createdAt" timestamp with time zone NULL DEFAULT now(),
   "updatedAt" timestamp with time zone NULL DEFAULT now(),
   CONSTRAINT Peminjaman_pkey PRIMARY KEY (id),

@@ -4,9 +4,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface ReportFilterProps {
-  onFilterChange: (month: number, year: number) => void;
-  selectedMonth: number;
-  selectedYear: number;
+  onFilterChange: (month: number, year: number) => void
+  selectedMonth: number
+  selectedYear: number
 }
 
 export function ReportFilter({ onFilterChange, selectedMonth, selectedYear }: ReportFilterProps) {
@@ -39,9 +39,9 @@ export function ReportFilter({ onFilterChange, selectedMonth, selectedYear }: Re
 
   return (
     <Card>
-      <CardContent className="pt-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-25">
-          <div className="space-y-2">
+      <CardContent className="p-4 sm:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="space-y-1.5 sm:space-y-2">
             <Label htmlFor="month">Bulan</Label>
             <Select value={selectedMonth.toString()} onValueChange={handleMonthChange}>
               <SelectTrigger id="month">
@@ -57,7 +57,7 @@ export function ReportFilter({ onFilterChange, selectedMonth, selectedYear }: Re
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             <Label htmlFor="year">Tahun</Label>
             <Select value={selectedYear.toString()} onValueChange={handleYearChange}>
               <SelectTrigger id="year">
