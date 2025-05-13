@@ -153,18 +153,34 @@ export function FormPeminjaman() {
 
       // Jika user tidak ada, insert user baru
       if (!existingUser) {
-          const { error: insertError } = await supabase
-            .from("Users")
-            .insert({
-              id: user.id,
-              email: user.emailAddresses?.[0]?.emailAddress ?? "",
-              nomorTelepon: nomorTelepon,
-              nama: user.fullName || user.username || "",
-              role: user.publicMetadata?.role || "user",
-            })
-          if (insertError) {
-            throw insertError
-          }
+        const { error: insertError } = await supabase
+          .from("Users")
+          .insert({
+            id: user.id,
+            email: user.emailAddresses?.[0]?.emailAddress ?? "",
+            nomorTelepon: nomorTelepon,
+            nama: user.fullName || user.username || "",
+            role: user.publicMetadata?.role || "user",
+          })
+        if (insertError) {
+          console.error("Error inserting new user:", insertError)
+          throw insertError
+        }
+      } else {
+        // Jika user sudah ada, update data user
+        const { error: updateUserError } = await supabase
+          .from("Users")
+          .update({
+            email: user.emailAddresses?.[0]?.emailAddress ?? "",
+            nomorTelepon: nomorTelepon,
+            nama: user.fullName || user.username || "",
+            role: user.publicMetadata?.role || "user",
+          })
+          .eq("id", user.id)
+        if (updateUserError) {
+          console.error("Error updating user:", updateUserError)
+          throw updateUserError
+        }
       }
 
       // Simpan data peminjaman
