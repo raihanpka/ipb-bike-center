@@ -1,10 +1,10 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { checkRole } from '@/utils/roles'
+import { checkRole } from '@/utils/roles';
 
 export default async function Page() {
   const { userId } = await auth();
-  const isAdmin = await checkRole('admin')
+  const isAdmin = await checkRole('admin');
 
   if (!userId) {
     return redirect('/auth/sign-in');

@@ -15,8 +15,8 @@ export function SignUpViewPage() {
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <SignUp
-        // signInUrl='/auth/sign-in'
-        // fallbackRedirectUrl='/dashboard/utama'
+      // signInUrl='/auth/sign-in'
+      // fallbackRedirectUrl='/dashboard/utama'
       />
     </div>
   );

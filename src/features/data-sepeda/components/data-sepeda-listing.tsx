@@ -16,7 +16,7 @@ export default async function DataSepedaListingPage({}: DataSepedaListingPage) {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(categories && { 
+    ...(categories && {
       jenis: Array.isArray(categories) ? categories.join('.') : categories
     })
   };

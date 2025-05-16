@@ -70,5 +70,5 @@ export const Icons = {
   check: IconCheck,
   peminjaman: IconBikeFilled,
   qrcode: IconQrcode,
-  history: IconHistory,
+  history: IconHistory
 };

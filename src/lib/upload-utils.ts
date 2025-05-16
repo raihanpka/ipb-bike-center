@@ -1,5 +1,5 @@
 // lib/upload-utils.ts
-import type { SupabaseClient } from "@supabase/supabase-js"
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * Upload file ke Supabase Storage.
@@ -15,30 +15,26 @@ export async function uploadFileToStorage(
   path: string
 ): Promise<string> {
   try {
-    const fileExt = file.name.split(".").pop()
-    const fileName = `${path}/${Date.now()}.${fileExt}`
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${path}/${Date.now()}.${fileExt}`;
 
-    const { error } = await client
-      .storage
+    const { error } = await client.storage.from(bucket).upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: true,
+      contentType: file.type
+    });
+
+    if (error) throw error;
+
+    const { data: urlData } = client.storage
       .from(bucket)
-      .upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: true,
-        contentType: file.type,
-      })
+      .getPublicUrl(fileName);
 
-    if (error) throw error
+    if (!urlData.publicUrl) throw new Error('Gagal mendapatkan URL publik');
 
-    const { data: urlData } = client
-      .storage
-      .from(bucket)
-      .getPublicUrl(fileName)
-
-    if (!urlData.publicUrl) throw new Error("Gagal mendapatkan URL publik")
-
-    return urlData.publicUrl
+    return urlData.publicUrl;
   } catch (err: any) {
-    throw new Error(`Gagal mengupload file: ${err.message}`)
+    throw new Error(`Gagal mengupload file: ${err.message}`);
   }
 }
 
@@ -85,14 +81,18 @@ export async function deleteFileFromStorage(
   bucket: string,
   folderPath: string
 ): Promise<void> {
-  const prefix = folderPath.endsWith("/") ? folderPath.slice(0, -1) : folderPath;
+  const prefix = folderPath.endsWith('/')
+    ? folderPath.slice(0, -1)
+    : folderPath;
 
   try {
     const allFilePaths = await listAllFilesRecursively(client, bucket, prefix);
 
     if (allFilePaths.length === 0) return;
 
-    const { error: removeError } = await client.storage.from(bucket).remove(allFilePaths);
+    const { error: removeError } = await client.storage
+      .from(bucket)
+      .remove(allFilePaths);
     if (removeError) throw removeError;
   } catch (err: any) {
     throw new Error(`Gagal menghapus folder dan isinya: ${err.message}`);

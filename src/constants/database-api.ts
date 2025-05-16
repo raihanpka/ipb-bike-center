@@ -18,7 +18,6 @@ export type DataSepeda = {
   deskripsi: string;
 };
 
-
 /**
  * Fungsi untuk mengubah format tanggal dari yy-mm-dd menjadi dd-mm-yy
  * @param dateStr - String tanggal dalam format yy-mm-dd atau ISO
@@ -26,18 +25,18 @@ export type DataSepeda = {
  */
 export function formatDate(dateStr: string | null): string {
   if (!dateStr) return '';
-  
+
   try {
     const date = new Date(dateStr);
-    
+
     // Pastikan tanggal valid
     if (isNaN(date.getTime())) return dateStr;
-    
+
     // Format tanggal ke dd-mm-yy
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear().toString();
-    
+
     return `${day}-${month}-${year}`;
   } catch {
     return dateStr; // Kembalikan string asli jika ada kesalahan
@@ -65,7 +64,7 @@ export function transformSepedaData(data: any): DataSepeda {
  */
 export function transformSepedaArray(dataArray: any[]): DataSepeda[] {
   if (!Array.isArray(dataArray)) return [];
-  return dataArray.map(item => transformSepedaData(item));
+  return dataArray.map((item) => transformSepedaData(item));
 }
 
 // Data sepeda
@@ -176,7 +175,7 @@ export const ambilDataSepeda = {
     search?: string;
   }) {
     const result = await this.getSepeda({ page, limit, jenis, status, search });
-    
+
     return {
       ...result,
       // Data sudah ditransformasi dalam getSepeda
@@ -219,7 +218,9 @@ export const ambilDataSepeda = {
   },
 
   // Membuat data sepeda baru
-  async createSepeda(data: Omit<DataSepeda, 'nomorSeri'> & { nomorSeri?: string }) {
+  async createSepeda(
+    data: Omit<DataSepeda, 'nomorSeri'> & { nomorSeri?: string }
+  ) {
     await delay(1000);
 
     const { data: newData, error } = await supabase
@@ -293,5 +294,5 @@ export const ambilDataSepeda = {
       success: true,
       message: 'Data sepeda berhasil dihapus'
     };
-  },
+  }
 };

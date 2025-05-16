@@ -39,7 +39,7 @@ export function useBreadcrumbs() {
       return {
         title: segment
           .split('-')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' '),
         link: path
       };

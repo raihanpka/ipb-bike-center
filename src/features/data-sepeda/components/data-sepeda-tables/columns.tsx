@@ -18,7 +18,7 @@ export const columns: ColumnDef<Sepeda>[] = [
       variant: 'text',
       icon: Text
     },
-    enableColumnFilter: false,
+    enableColumnFilter: false
   },
   {
     id: 'jenis',
@@ -46,7 +46,7 @@ export const columns: ColumnDef<Sepeda>[] = [
     accessorKey: 'merk',
     header: 'Merk',
     meta: {
-      label: 'Merk',
+      label: 'Merk'
     }
   },
   {
@@ -74,14 +74,14 @@ export const columns: ColumnDef<Sepeda>[] = [
     accessorKey: 'tanggalPerawatanTerakhir',
     header: 'Tanggal Perawatan Terakhir',
     meta: {
-      label: 'Tanggal Perawatan Terakhir',
+      label: 'Tanggal Perawatan Terakhir'
     }
   },
   {
     accessorKey: 'deskripsi',
     header: 'Deskripsi',
     meta: {
-      label: 'Deskripsi',
+      label: 'Deskripsi'
     }
   },
   {

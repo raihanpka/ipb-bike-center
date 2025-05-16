@@ -38,7 +38,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         router.refresh(); // Refresh halaman setelah penghapusan
       }
       window.location.href = '/admin/data-sepeda';
-
     } catch (err: any) {
       alert('Unexpected error: ' + err.message);
     } finally {
@@ -63,7 +62,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => router.push(`/admin/data-sepeda/${data.nomorSeri}`)}>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/data-sepeda/${data.nomorSeri}`)}
+          >
             <IconEdit className='mr-2 h-4 w-4' /> Perbarui
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>

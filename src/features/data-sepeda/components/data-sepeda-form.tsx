@@ -35,11 +35,9 @@ const formSchema = z.object({
     .regex(/^[a-zA-Z0-9]+$/, {
       message: 'Nomor seri hanya boleh mengandung karakter alfanumerik.'
     }),
-  merk: z
-    .string()
-    .regex(/^[a-zA-Z\s]+$/, {
-      message: 'Merk hanya boleh mengandung karakter alfanumerik dan spasi.'
-    }),
+  merk: z.string().regex(/^[a-zA-Z\s]+$/, {
+    message: 'Merk hanya boleh mengandung karakter alfanumerik dan spasi.'
+  }),
   jenis: z.string(),
   status: z.enum(['Tersedia', 'Dipinjam', 'Sedang Perawatan']),
   tanggalPerawatanTerakhir: z.string().optional(),
@@ -54,7 +52,6 @@ function getCurrentDate(): string {
   return `${year}-${month}-${day}`;
 }
 
-
 export default function DataSepedaForm({
   initialData,
   pageTitle
@@ -66,8 +63,11 @@ export default function DataSepedaForm({
     nomorSeri: initialData?.nomorSeri || '',
     merk: initialData?.merk || '',
     jenis: initialData?.jenis || '',
-    status: initialData?.status as 'Tersedia' | 'Dipinjam' | 'Sedang Perawatan' || 'Tersedia',
-    tanggalPerawatanTerakhir: initialData?.tanggalPerawatanTerakhir || getCurrentDate(),
+    status:
+      (initialData?.status as 'Tersedia' | 'Dipinjam' | 'Sedang Perawatan') ||
+      'Tersedia',
+    tanggalPerawatanTerakhir:
+      initialData?.tanggalPerawatanTerakhir || getCurrentDate(),
     deskripsi: initialData?.deskripsi || ''
   };
 
@@ -93,14 +93,13 @@ export default function DataSepedaForm({
         if (error) {
           throw toast.error(error.message, {
             richColors: true,
-            position: 'top-center',
+            position: 'top-center'
           });
         }
         toast.success('Data sepeda berhasil diperbarui!', {
           richColors: true,
-          position: 'top-center',
+          position: 'top-center'
         });
-        
       } else {
         const { error } = await supabase
           .from('DataSepeda')
@@ -109,12 +108,12 @@ export default function DataSepedaForm({
         if (error) {
           throw toast.error(error.message, {
             richColors: true,
-            position: 'top-center',
+            position: 'top-center'
           });
         }
         toast.success('Data sepeda baru berhasil ditambahkan!', {
           richColors: true,
-          position: 'top-center',
+          position: 'top-center'
         });
       }
 
@@ -122,10 +121,13 @@ export default function DataSepedaForm({
         window.location.href = '/admin/data-sepeda';
       }, 1000);
     } catch {
-      toast.error(`Gagal menyimpan data! Cek bagian form yang belum terisi atau ID duplikat!`, {
-        richColors: true,
-        position: 'top-center',
-      });
+      toast.error(
+        `Gagal menyimpan data! Cek bagian form yang belum terisi atau ID duplikat!`,
+        {
+          richColors: true,
+          position: 'top-center'
+        }
+      );
     }
   }
 
@@ -209,17 +211,19 @@ export default function DataSepedaForm({
                     <SelectContent>
                       <SelectItem value='Tersedia'>Tersedia</SelectItem>
                       <SelectItem value='Dipinjam'>Dipinjam</SelectItem>
-                      <SelectItem value='Sedang Perawatan'>Sedang Perawatan</SelectItem>
+                      <SelectItem value='Sedang Perawatan'>
+                        Sedang Perawatan
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='tanggalPerawatanTerakhir'
-                render={({ field }) => (
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='tanggalPerawatanTerakhir'
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tanggal Perawatan Terakhir</FormLabel>
                   <FormControl>
@@ -230,25 +234,25 @@ export default function DataSepedaForm({
               )}
             />
             <FormField
-          control={form.control}
-          name='deskripsi'
-          render={({ field }) => (
-          <FormItem>
-            <FormLabel>Deskripsi</FormLabel>
-            <FormControl>
-            <Textarea
-              placeholder='Masukkan deskripsi sepeda'
-              className='resize-none'
-              {...field}
+              control={form.control}
+              name='deskripsi'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deskripsi</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='Masukkan deskripsi sepeda'
+                      className='resize-none'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-          )}
-        />
-        <Button type='submit'>Simpan Data Sepeda</Button>
-        </form>
-      </Form>
+            <Button type='submit'>Simpan Data Sepeda</Button>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

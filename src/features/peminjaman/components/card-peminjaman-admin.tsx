@@ -1,43 +1,59 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { format } from "date-fns"
-import { id as LocaleId } from "date-fns/locale"
-import { Bike, Calendar, Clock, User, Check, X, Phone, Eye } from "lucide-react"
-import { toast } from "sonner"
+import { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
+import { id as LocaleId } from 'date-fns/locale';
+import {
+  Bike,
+  Calendar,
+  Clock,
+  User,
+  Check,
+  X,
+  Phone,
+  Eye
+} from 'lucide-react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import Image from "next/image"
-import { supabase } from "@/lib/supabase"
+  DialogTitle
+} from '@/components/ui/dialog';
+import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 
 type PeminjamanAdminCardProps = {
-  id: string
-  userId: string
-  nomorSeriSepeda: string
-  tanggalPeminjaman: string
-  jangkaPeminjaman: string
-  tanggalPengembalian: string
-  statusId: number
-  statusNama: string
-  jenisSepeda: string
-  merkSepeda: string
-  namaUser: string
-  emailUser: string
-  nomorTeleponAktif: string
-  fotoPeminjam: string | null
-  fotoKTM: string | null
-  suratPeminjaman: string | null
-  onStatusUpdate: () => void
-}
+  id: string;
+  userId: string;
+  nomorSeriSepeda: string;
+  tanggalPeminjaman: string;
+  jangkaPeminjaman: string;
+  tanggalPengembalian: string;
+  statusId: number;
+  statusNama: string;
+  jenisSepeda: string;
+  merkSepeda: string;
+  namaUser: string;
+  emailUser: string;
+  nomorTeleponAktif: string;
+  fotoPeminjam: string | null;
+  fotoKTM: string | null;
+  suratPeminjaman: string | null;
+  onStatusUpdate: () => void;
+};
 
 export function CardPeminjamanAdmin({
   id,
@@ -56,310 +72,354 @@ export function CardPeminjamanAdmin({
   fotoPeminjam,
   fotoKTM,
   suratPeminjaman,
-  onStatusUpdate,
+  onStatusUpdate
 }: PeminjamanAdminCardProps) {
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleApprove = async () => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       // Update status peminjaman
       const { error: peminjamanError } = await supabase
-        .from("Peminjaman")
-        .update({ statusId: 2 }) // 2 = Disetujui
-        .eq("id", id)
+        .from('Peminjaman')
+        .update({ statusId: 2 }) // 2 = Aktif
+        .eq('id', id);
 
-      if (peminjamanError) throw peminjamanError
+      if (peminjamanError) throw peminjamanError;
 
       // Update status sepeda
       const { error: sepedaError } = await supabase
-        .from("DataSepeda")
-        .update({ status: "Dipinjam" })
-        .eq("nomorSeri", nomorSeriSepeda)
+        .from('DataSepeda')
+        .update({ status: 'Dipinjam' })
+        .eq('nomorSeri', nomorSeriSepeda);
 
-      if (sepedaError) throw sepedaError
+      if (sepedaError) throw sepedaError;
 
-      toast.success("Peminjaman berhasil disetujui")
-      onStatusUpdate()
+      toast.success('Peminjaman berhasil disetujui');
+      onStatusUpdate();
     } catch (error: any) {
-      toast.error(error.message || "Terjadi kesalahan saat menyetujui peminjaman", {richColors: true})
+      toast.error(
+        error.message || 'Terjadi kesalahan saat menyetujui peminjaman',
+        { richColors: true }
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleReject = async () => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       // Update status peminjaman
       const { error: peminjamanError } = await supabase
-        .from("Peminjaman")
+        .from('Peminjaman')
         .update({ statusId: 3 }) // 3 = Ditolak
-        .eq("id", id)
+        .eq('id', id);
 
-      if (peminjamanError) throw peminjamanError
+      if (peminjamanError) throw peminjamanError;
 
       // Update status sepeda
       const { error: sepedaError } = await supabase
-        .from("DataSepeda")
-        .update({ status: "Tersedia" })
-        .eq("nomorSeri", nomorSeriSepeda)
+        .from('DataSepeda')
+        .update({ status: 'Tersedia' })
+        .eq('nomorSeri', nomorSeriSepeda);
 
-      if (sepedaError) throw sepedaError
+      if (sepedaError) throw sepedaError;
 
-      toast.success("Peminjaman berhasil ditolak")
-      onStatusUpdate()
+      toast.success('Peminjaman berhasil ditolak');
+      onStatusUpdate();
     } catch (error: any) {
-      toast.error(error.message || "Terjadi kesalahan saat menolak peminjaman", {richColors: true})
+      toast.error(
+        error.message || 'Terjadi kesalahan saat menolak peminjaman',
+        { richColors: true }
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleComplete = async () => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       // Update status peminjaman
       const { error: peminjamanError } = await supabase
-        .from("Peminjaman")
+        .from('Peminjaman')
         .update({ statusId: 4 }) // 4 = Selesai
-        .eq("id", id)
+        .eq('id', id);
 
-      if (peminjamanError) throw peminjamanError
+      if (peminjamanError) throw peminjamanError;
 
       // Update status sepeda
       const { error: sepedaError } = await supabase
-        .from("DataSepeda")
-        .update({ status: "Tersedia" })
-        .eq("nomorSeri", nomorSeriSepeda)
+        .from('DataSepeda')
+        .update({ status: 'Tersedia' })
+        .eq('nomorSeri', nomorSeriSepeda);
 
-      if (sepedaError) throw sepedaError
+      if (sepedaError) throw sepedaError;
 
-      toast.success("Peminjaman berhasil diselesaikan")
-      onStatusUpdate()
+      toast.success('Peminjaman berhasil diselesaikan');
+      onStatusUpdate();
     } catch (error: any) {
-      toast.error(error.message || "Terjadi kesalahan saat menyelesaikan peminjaman", {richColors: true})
+      toast.error(
+        error.message || 'Terjadi kesalahan saat menyelesaikan peminjaman',
+        { richColors: true }
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const getStatusColor = (statusId: number) => {
     switch (statusId) {
       case 1: // Menunggu Persetujuan
-        return "bg-yellow-100 text-yellow-800"
-      case 2: // Disetujui
-        return "bg-green-100 text-green-800"
+        return 'bg-yellow-100 text-yellow-800';
+      case 2: // Aktif
+        return 'bg-green-100 text-green-800';
       case 3: // Ditolak
-        return "bg-red-100 text-red-800"
+        return 'bg-red-100 text-red-800';
       case 4: // Selesai
-        return "bg-blue-100 text-blue-800"
+        return 'bg-blue-100 text-blue-800';
       case 5: // Dibatalkan
-        return "bg-gray-100 text-gray-800"
+        return 'bg-gray-100 text-gray-800';
+      case 6: // Terlambat
+        return 'bg-orange-100 text-orange-800';
       default:
-        return "bg-gray-100 text-gray-800"
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
   return (
     <>
-      <Card className="overflow-hidden">
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start">
-            <CardTitle className="text-lg">
+      <Card className='overflow-hidden'>
+        <CardHeader className='pb-2'>
+          <div className='flex items-start justify-between'>
+            <CardTitle className='text-lg'>
               {merkSepeda} {jenisSepeda}
             </CardTitle>
             <Badge className={getStatusColor(statusId)}>{statusNama}</Badge>
           </div>
           <CardDescription>ID: {id.slice(0, 8)}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex items-center">
-            <User className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">{namaUser}</span>
+        <CardContent className='space-y-2'>
+          <div className='flex items-center'>
+            <User className='text-muted-foreground mr-2 h-4 w-4' />
+            <span className='text-sm'>{namaUser}</span>
           </div>
-          <div className="flex items-center">
-            <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">{nomorTeleponAktif}</span>
+          <div className='flex items-center'>
+            <Phone className='text-muted-foreground mr-2 h-4 w-4' />
+            <span className='text-sm'>{nomorTeleponAktif}</span>
           </div>
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">
-              Tanggal: {format(new Date(tanggalPeminjaman), "dd MMMM yyyy", { locale: LocaleId })}
+          <div className='flex items-center'>
+            <Calendar className='text-muted-foreground mr-2 h-4 w-4' />
+            <span className='text-sm'>
+              Tanggal:{' '}
+              {format(new Date(tanggalPeminjaman), 'dd MMMM yyyy', {
+                locale: LocaleId
+              })}
             </span>
           </div>
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">Jangka Waktu: {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}</span>
+          <div className='flex items-center'>
+            <Clock className='text-muted-foreground mr-2 h-4 w-4' />
+            <span className='text-sm'>
+              Jangka Waktu:{' '}
+              {jangkaPeminjaman === 'Harian' ? '1 Hari' : '2 Bulan'}
+            </span>
           </div>
-          <div className="flex items-center">
-            <Bike className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">No. Seri: {nomorSeriSepeda}</span>
+          <div className='flex items-center'>
+            <Bike className='text-muted-foreground mr-2 h-4 w-4' />
+            <span className='text-sm'>No. Seri: {nomorSeriSepeda}</span>
           </div>
         </CardContent>
-        <CardFooter className="flex gap-2 justify-end">
-        {(statusId !== 4 && statusId !== 5) && (
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex items-center gap-1"
-            onClick={() => setIsDetailDialogOpen(true)}
-          >
-            <Eye className="h-4 w-4" /> Detail
-          </Button>
-        )}
-        {statusId === 1 && ( // Menunggu Persetujuan
-          <>
+        <CardFooter className='flex justify-end gap-2'>
+          {statusId !== 4 && statusId !== 5 && (
             <Button
-              size="sm"
-              variant="outline"
-              className="flex items-center gap-1"
-              onClick={handleReject}
-              disabled={isSubmitting}
+              size='sm'
+              variant='outline'
+              className='flex items-center gap-1'
+              onClick={() => setIsDetailDialogOpen(true)}
             >
-              <X className="h-4 w-4" /> Tolak
+              <Eye className='h-4 w-4' /> Detail
             </Button>
-            <Button size="sm" className="flex items-center gap-1" onClick={handleApprove} disabled={isSubmitting}>
-              <Check className="h-4 w-4" /> Setujui
-            </Button>
-          </>
-        )}
+          )}
+          {statusId === 1 && ( // Menunggu Persetujuan
+            <>
+              <Button
+                size='sm'
+                variant='outline'
+                className='flex items-center gap-1'
+                onClick={handleReject}
+                disabled={isSubmitting}
+              >
+                <X className='h-4 w-4' /> Tolak
+              </Button>
+              <Button
+                size='sm'
+                className='flex items-center gap-1'
+                onClick={handleApprove}
+                disabled={isSubmitting}
+              >
+                <Check className='h-4 w-4' /> Setujui
+              </Button>
+            </>
+          )}
 
-          {statusId === 2 && ( // Disetujui
+          {statusId === 2 && ( // Aktif
             <Button
-              size="sm"
-              variant="outline"
-              className="flex items-center gap-1"
+              size='sm'
+              variant='outline'
+              className='flex items-center gap-1'
               onClick={handleComplete}
               disabled={isSubmitting}
             >
-              <Check className="h-4 w-4" /> Selesai
+              <Check className='h-4 w-4' /> Selesai
             </Button>
           )}
         </CardFooter>
       </Card>
 
-      {(statusId !== 4 && statusId !== 5) && (
+      {statusId !== 4 && statusId !== 5 && (
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className='max-h-[90vh] max-w-3xl overflow-y-auto'>
             <DialogHeader>
               <DialogTitle>Detail Peminjaman</DialogTitle>
-              <DialogDescription>Detail lengkap peminjaman sepeda</DialogDescription>
+              <DialogDescription>
+                Detail lengkap peminjaman sepeda
+              </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-          <div>
-            <h3 className="font-medium mb-2">Informasi Peminjam</h3>
-            <div className="space-y-2">
-              <p className="text-sm">
-                <span className="font-medium">Nama:</span> {namaUser}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Email:</span> {emailUser}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">No. Telepon:</span> {nomorTeleponAktif}
-              </p>
-            </div>
-          </div>
-          <div>
-            <h3 className="font-medium mb-2">Informasi Sepeda</h3>
-            <div className="space-y-2">
-              <p className="text-sm">
-                <span className="font-medium">Merk:</span> {merkSepeda}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Jenis:</span> {jenisSepeda}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">No. Seri:</span> {nomorSeriSepeda}
-              </p>
-            </div>
-          </div>
-          <div>
-            <h3 className="font-medium mb-2">Informasi Peminjaman</h3>
-            <div className="space-y-2">
-              <p className="text-sm">
-                <span className="font-medium">Tanggal Peminjaman:</span>{" "}
-                {format(new Date(tanggalPeminjaman), "dd MMMM yyyy", { locale: LocaleId })}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Jangka Waktu:</span>{" "}
-                {jangkaPeminjaman === "Harian" ? "1 Hari" : "2 Bulan"}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Tanggal Pengembalian:</span>{" "}
-                {format(new Date(tanggalPengembalian), "dd MMMM yyyy", { locale: LocaleId })}
-              </p>
-              <p className="text-sm">
-                <span className="font-medium">Status:</span>{" "}
-                <Badge className={getStatusColor(statusId)}>{statusNama}</Badge>
-              </p>
-            </div>
-          </div>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+              <div className='space-y-4'>
+                <div>
+                  <h3 className='mb-2 font-medium'>Informasi Peminjam</h3>
+                  <div className='space-y-2'>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Nama:</span> {namaUser}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Email:</span> {emailUser}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>No. Telepon:</span>{' '}
+                      {nomorTeleponAktif}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className='mb-2 font-medium'>Informasi Sepeda</h3>
+                  <div className='space-y-2'>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Merk:</span> {merkSepeda}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Jenis:</span> {jenisSepeda}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>No. Seri:</span>{' '}
+                      {nomorSeriSepeda}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className='mb-2 font-medium'>Informasi Peminjaman</h3>
+                  <div className='space-y-2'>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Tanggal Peminjaman:</span>{' '}
+                      {format(new Date(tanggalPeminjaman), 'dd MMMM yyyy', {
+                        locale: LocaleId
+                      })}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Jangka Waktu:</span>{' '}
+                      {jangkaPeminjaman === 'Harian' ? '1 Hari' : '2 Bulan'}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Tanggal Pengembalian:</span>{' '}
+                      {format(new Date(tanggalPengembalian), 'dd MMMM yyyy', {
+                        locale: LocaleId
+                      })}
+                    </p>
+                    <p className='text-sm'>
+                      <span className='font-medium'>Status:</span>{' '}
+                      <Badge className={getStatusColor(statusId)}>
+                        {statusNama}
+                      </Badge>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-4">
-          <div>
-            <h3 className="font-medium mb-2">Foto Peminjam</h3>
-            {fotoPeminjam ? (
-              <div className="border rounded-md overflow-hidden">
-                <Image
-            src={fotoPeminjam || "/placeholder.svg"}
-            alt="Foto Peminjam"
-            width={300}
-            height={300}
-            className="object-cover justify-center"
-                />
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Tidak ada foto peminjam</p>
-            )}
-          </div>
-          <div>
-            <h3 className="font-medium mb-2">Foto KTM</h3>
-            {fotoKTM ? (
-              <div className="border rounded-md overflow-hidden">
-                <Image
-            src={fotoKTM || "/placeholder.svg"}
-            alt="Foto KTM"
-            width={300}
-            height={300}
-            className="object-cover"
-                />
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Tidak ada foto KTM</p>
-            )}
-          </div>
-          {suratPeminjaman && (
-            <div>
-              <h3 className="font-medium mb-2">Surat Peminjaman</h3>
-              <Button
-              asChild
-              className="w-full"
-              variant="outline"
-              size="sm"
-              >
-              <a href={suratPeminjaman} target="_blank" rel="noopener noreferrer" download>
-                Unduh Surat Peminjaman
-              </a>
-              </Button>
-            </div>
-          )}
+              <div className='space-y-4'>
+                <div>
+                  <h3 className='mb-2 font-medium'>Foto Peminjam</h3>
+                  {fotoPeminjam ? (
+                    <div className='overflow-hidden rounded-md border'>
+                      <Image
+                        src={fotoPeminjam || '/placeholder.svg'}
+                        alt='Foto Peminjam'
+                        width={300}
+                        height={300}
+                        className='justify-center object-cover'
+                      />
+                    </div>
+                  ) : (
+                    <p className='text-muted-foreground text-sm'>
+                      Tidak ada foto peminjam
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <h3 className='mb-2 font-medium'>Foto KTM</h3>
+                  {fotoKTM ? (
+                    <div className='overflow-hidden rounded-md border'>
+                      <Image
+                        src={fotoKTM || '/placeholder.svg'}
+                        alt='Foto KTM'
+                        width={300}
+                        height={300}
+                        className='object-cover'
+                      />
+                    </div>
+                  ) : (
+                    <p className='text-muted-foreground text-sm'>
+                      Tidak ada foto KTM
+                    </p>
+                  )}
+                </div>
+                {suratPeminjaman && (
+                  <div>
+                    <h3 className='mb-2 font-medium'>Surat Peminjaman</h3>
+                    <Button
+                      asChild
+                      className='w-full'
+                      variant='outline'
+                      size='sm'
+                    >
+                      <a
+                        href={suratPeminjaman}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        download
+                      >
+                        Unduh Surat Peminjaman
+                      </a>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDetailDialogOpen(false)}>
-          Tutup
+              <Button
+                variant='outline'
+                onClick={() => setIsDetailDialogOpen(false)}
+              >
+                Tutup
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
     </>
-  )
+  );
 }

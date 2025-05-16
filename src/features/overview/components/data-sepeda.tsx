@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase';
 
 export async function JumlahSepedaTersedia(): Promise<number> {
   const { count, error } = await supabase
@@ -25,4 +25,3 @@ export async function JumlahSepedaDipinjam(): Promise<number> {
 
   return count || 0;
 }
-

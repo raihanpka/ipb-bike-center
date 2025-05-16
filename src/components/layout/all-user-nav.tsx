@@ -31,10 +31,13 @@ export function UserNav() {
       });
       router.push('/auth/sign-in');
     } catch (error) {
-      toast.error(`Sign out failed: ${error instanceof Error ? error.message : String(error)}`, {
-        richColors: true,
-        position: 'bottom-center'
-      });
+      toast.error(
+        `Sign out failed: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          richColors: true,
+          position: 'bottom-center'
+        }
+      );
     } finally {
       setIsSigningOut(false);
     }

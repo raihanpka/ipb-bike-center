@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase';
 
 export async function JumlahSepedaTersedia(): Promise<number> {
   const { count, error } = await supabase
@@ -33,12 +33,13 @@ export async function JumlahMenungguPersetujuan(): Promise<number> {
     .eq('statusId', 1);
 
   if (error) {
-    throw new Error(`Gagal mendapatkan status menunggu persetujuan: ${error.message}`);
+    throw new Error(
+      `Gagal mendapatkan status menunggu persetujuan: ${error.message}`
+    );
   }
 
   return count || 0;
 }
-
 
 export async function JumlahPeminjamanBulanan(): Promise<number> {
   const now = new Date();
@@ -56,7 +57,9 @@ export async function JumlahPeminjamanBulanan(): Promise<number> {
     .not('statusId', 'in', '(5,3)');
 
   if (error) {
-    throw new Error(`Gagal mendapatkan jumlah peminjaman bulanan: ${error.message}`);
+    throw new Error(
+      `Gagal mendapatkan jumlah peminjaman bulanan: ${error.message}`
+    );
   }
 
   return count || 0;
