@@ -6,40 +6,45 @@ import { format, differenceInDays, parseISO } from "date-fns"
 import { id as localeId } from "date-fns/locale"
 import { supabase } from "@/lib/supabase"
 
-// Inisialisasi Resend dengan API key
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function kirimEmailKeterlambatan(idPeminjaman: string) {
   try {
-    // Ambil data peminjaman dari Supabase dengan JOIN ke tabel terkait
+    // Ambil data peminjaman saja
     const { data: peminjaman, error } = await supabase
       .from("Peminjaman")
-      .select(`
-        id,
-        userId,
-        nomorSeriSepeda,
-        tanggalPeminjaman,
-        jangkaPeminjaman,
-        tanggalPengembalian,
-        statusId,
-        DataSepeda:nomorSeriSepeda (
-          merkSepeda,
-          jenisSepeda
-        ),
-        Users:userId (
-          nama,
-          email,
-          nomorTeleponAktif
-        ),
-        notifikasiTerkirim
-      `)
+      .select("*")
       .eq("id", idPeminjaman)
-      .eq("statusId", 6) // Hanya kirim untuk peminjaman terlambat
+      .eq("statusId", 6)
       .single()
 
     if (error || !peminjaman) {
       console.error("Error mengambil data peminjaman:", error)
       return { sukses: false, error: "Data peminjaman tidak ditemukan" }
+    }
+
+    // Ambil data user
+    const { data: user, error: errorUser } = await supabase
+      .from("Users")
+      .select("nama, email, nomorTelepon")
+      .eq("id", peminjaman.userId)
+      .single()
+
+    if (errorUser || !user?.email) {
+      console.error("Data email pengguna tidak ditemukan")
+      return { sukses: false, error: "Email pengguna tidak ditemukan" }
+    }
+
+    // Ambil data sepeda
+    const { data: sepeda, error: errorSepeda } = await supabase
+      .from("DataSepeda")
+      .select("merk, jenis")
+      .eq("nomorSeri", peminjaman.nomorSeriSepeda)
+      .single()
+
+    if (errorSepeda || !sepeda) {
+      console.error("Data sepeda tidak ditemukan")
+      return { sukses: false, error: "Data sepeda tidak ditemukan" }
     }
 
     // Format tanggal untuk email
@@ -54,12 +59,12 @@ export async function kirimEmailKeterlambatan(idPeminjaman: string) {
     // Kirim email menggunakan Resend
     const { data, error: errorKirim } = await resend.emails.send({
       from: "IPB Bike Center <no-reply@info.ipbbike.my.id>",
-      to: [peminjaman.Users[0].email],
+      to: [user.email],
       subject: "Pemberitahuan Keterlambatan Pengembalian Sepeda",
       react: EmailKeterlambatan({
-        namaUser: peminjaman.Users[0].nama,
-        merkSepeda: peminjaman.DataSepeda[0].merkSepeda,
-        jenisSepeda: peminjaman.DataSepeda[0].jenisSepeda,
+        namaUser: user.nama,
+        merkSepeda: sepeda.merk,
+        jenisSepeda: sepeda.jenis,
         nomorSeriSepeda: peminjaman.nomorSeriSepeda,
         tanggalPeminjaman: tanggalPeminjamanFormat,
         tanggalPengembalian: tanggalPengembalianFormat,

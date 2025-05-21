@@ -39,7 +39,7 @@ export const EmailKeterlambatan = ({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://www.ipb.ac.id/wp-content/uploads/2024/02/Logo-IPB-baru1000.png"
+            src="https://kbyohjsdzfncnqnnzzwe.supabase.co/storage/v1/object/public/peminjaman//Logo.png"
             width="120"
             height="120"
             alt="IPB University"
@@ -49,7 +49,7 @@ export const EmailKeterlambatan = ({
           <Heading style={header}>Pemberitahuan Keterlambatan</Heading>
 
           <Section style={section}>
-            <Text style={paragraph}>Halo {namaUser},</Text>
+            <Text style={paragraph}>Halo <strong>{namaUser}</strong>,</Text>
             <Text style={paragraph}>
               Kami ingin memberitahukan bahwa Anda belum mengembalikan sepeda yang Anda pinjam dari IPB Bike Center.
               Detail peminjaman Anda adalah sebagai berikut:
@@ -162,7 +162,7 @@ const buttonContainer = {
 }
 
 const button = {
-  backgroundColor: "#10b981",
+  backgroundColor: "#0084d1",
   borderRadius: "6px",
   color: "#fff",
   fontSize: "16px",
@@ -186,6 +186,6 @@ const footer = {
 }
 
 const link = {
-  color: "#10b981",
+  color: "#0084d1",
   textDecoration: "underline",
 }
