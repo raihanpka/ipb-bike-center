@@ -100,6 +100,7 @@ export interface Database {
           fotoPeminjam: string | null;
           fotoKTM: string | null;
           suratPeminjaman: string | null;
+          notifikasiTerkirim?: boolean | false;
           createdAt: string;
           updatedAt: string;
         };
@@ -115,6 +116,7 @@ export interface Database {
           fotoPeminjam?: string | null;
           fotoKTM?: string | null;
           suratPeminjaman?: string | null;
+          notifikasiTerkirim?: boolean
           createdAt?: string;
           updatedAt?: string;
         };
@@ -130,35 +132,7 @@ export interface Database {
           fotoPeminjam?: string | null;
           fotoKTM?: string | null;
           suratPeminjaman?: string | null;
-          createdAt?: string;
-          updatedAt?: string;
-        };
-      };
-      RiwayatPerawatan: {
-        Row: {
-          id: string;
-          nomorSeriSepeda: string;
-          tanggalPerawatan: string;
-          deskripsi: string;
-          teknisiId: string | null;
-          createdAt: string;
-          updatedAt: string;
-        };
-        Insert: {
-          id?: string;
-          nomorSeriSepeda: string;
-          tanggalPerawatan: string;
-          deskripsi: string;
-          teknisiId?: string | null;
-          createdAt?: string;
-          updatedAt?: string;
-        };
-        Update: {
-          id?: string;
-          nomorSeriSepeda?: string;
-          tanggalPerawatan?: string;
-          deskripsi?: string;
-          teknisiId?: string | null;
+          notifikasiTerkirim?: boolean
           createdAt?: string;
           updatedAt?: string;
         };

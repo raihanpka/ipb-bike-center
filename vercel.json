@@ -1,0 +1,6 @@
+{
+  "crons": [{
+    "path": "/api/cron/periksa-terlambat", 
+    "schedule": "0 9 * * *"
+  }]
+}

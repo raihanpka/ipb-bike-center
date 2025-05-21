@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { SistemNotifikasiKeterlambatan } from '@/components/sistem-notifikasi-keterlambatan';
 
 type Peminjaman = {
   id: string;
@@ -142,6 +143,7 @@ export default function RiwayatPeminjamanPage() {
   );
 
   return (
+    <>
     <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4 px-2 sm:px-4'>
         <h1 className='mb-4 text-center text-2xl font-bold sm:mb-6 sm:text-left sm:text-3xl'>
@@ -219,5 +221,7 @@ export default function RiwayatPeminjamanPage() {
         </Tabs>
       </div>
     </PageContainer>
+    <SistemNotifikasiKeterlambatan />
+    </>
   );
 }

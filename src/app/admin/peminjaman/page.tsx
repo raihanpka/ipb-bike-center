@@ -27,6 +27,7 @@ type Peminjaman = {
   fotoPeminjam: string | null;
   fotoKTM: string | null;
   suratPeminjaman: string | null;
+  notifikasiTerkirim?: boolean;
 };
 
 export default function KelolaPeminjamanPage() {

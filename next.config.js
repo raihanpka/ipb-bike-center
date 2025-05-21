@@ -5,15 +5,19 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'utfs.io',
-        port: ''
+        port: '',
       },
       {
         protocol: 'https',
         hostname: 'api.slingacademy.com',
-        port: ''
-      }
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'kbyohjsdzfncnqnnzzwe.supabase.co',
+        port: '',
+      },
     ],
-    domains: ['kbyohjsdzfncnqnnzzwe.supabase.co']
   },
   webpack(config) {
     config.module.rules.push({
@@ -23,7 +27,11 @@ const nextConfig = {
 
     return config;
   },
-  transpilePackages: ['geist']
+  transpilePackages: ['geist'],
+  serverExternalPackages: [], // This will use the default list minus any packages you specify
+  experimental: {
+    serverComponentsExternalPackages: [] // For older Next.js versions
+  },
 };
 
 module.exports = nextConfig;

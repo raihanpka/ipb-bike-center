@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { AlertModal } from '@/components/modal/alert-modal';
 import { useState } from 'react';
 import {
@@ -12,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { id as LocaleId } from 'date-fns/locale';
 import {
   Bike,
@@ -54,6 +55,7 @@ type PeminjamanAdminCardProps = {
   fotoPeminjam: string | null;
   fotoKTM: string | null;
   suratPeminjaman: string | null;
+  notifikasiTerkirim?: boolean;
   onStatusUpdate: () => void;
 };
 
@@ -80,6 +82,58 @@ export function CardPeminjamanAdmin({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+    // Cek keterlambatan pengembalian
+    const isTerlambat = async () => {
+      if (!tanggalPengembalian) return false;
+      try {
+        // Konversi tanggalPengembalian ke Date (anggap sudah dalam format ISO)
+        const pengembalianDate = parseISO(tanggalPengembalian);
+  
+        // Waktu sekarang dalam WIB (UTC+7)
+        const now = new Date();
+        const nowWIB = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+  
+        // Hari dalam minggu (0 = Minggu, 1 = Senin, ..., 6 = Sabtu)
+        const dayOfWeek = nowWIB.getUTCDay();
+        const hour = nowWIB.getUTCHours();
+  
+        // Cek apakah sudah lewat jam batas
+        let batasJam = null;
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+          // Senin-Jumat
+          batasJam = 16;
+        } else if (dayOfWeek === 6) {
+          // Sabtu
+          batasJam = 12;
+        } else {
+          // Minggu tidak dihitung keterlambatan
+          return false;
+        }
+  
+        // Jika sudah lewat jam batas dan tanggalPengembalian < sekarang WIB
+        if (hour >= batasJam && pengembalianDate < nowWIB) {
+          // Jika status masih 2 (aktif), update ke 6 (terlambat)
+          if (statusId === 2) {
+            await supabase.from('Peminjaman').update({ statusId: 6 }).eq('id', id);
+            onStatusUpdate();
+          }
+          return true;
+        }
+        return false;
+      } catch {
+        return false;
+      }
+    };
+  
+    // Jalankan cek keterlambatan saat komponen mount atau statusId berubah
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+      if (statusId === 2) {
+        isTerlambat();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [statusId]);
 
   const handleApprove = async () => {
     setIsSubmitting(true);

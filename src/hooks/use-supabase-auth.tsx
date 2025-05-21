@@ -1,4 +1,3 @@
-// src/hooks/use-supabase-auth.tsx
 'use client';
 
 import { useUser } from '@clerk/nextjs';
