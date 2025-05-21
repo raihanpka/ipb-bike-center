@@ -25,12 +25,12 @@ interface PropsEmailKeterlambatan {
 
 export const EmailKeterlambatan = ({
   namaUser = "Mahasiswa IPB",
-  merkSepeda = "Polygon",
-  jenisSepeda = "Mountain Bike",
-  nomorSeriSepeda = "BK-2023-001",
-  tanggalPeminjaman = "15 Mei 2023",
-  tanggalPengembalian = "17 Mei 2023",
-  hariTerlambat = 2,
+  merkSepeda = "IPB Bike",
+  jenisSepeda = "Sepeda Keranjang",
+  nomorSeriSepeda = "IPB000",
+  tanggalPeminjaman = "21 Mei 2025",
+  tanggalPengembalian = "21 Mei 2025",
+  hariTerlambat = 1,
 }: PropsEmailKeterlambatan) => {
   return (
     <Html>
@@ -79,7 +79,7 @@ export const EmailKeterlambatan = ({
             </Text>
 
             <Section style={buttonContainer}>
-              <Button style={button} href="https://ipb-bike-center.vercel.app/dashboard/peminjaman">
+              <Button style={button} href="https://ipbbike.my.id/dashboard/peminjaman">
                 Lihat Detail Peminjaman
               </Button>
             </Section>

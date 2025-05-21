@@ -2,17 +2,12 @@
 
 import { Resend } from "resend"
 import { EmailKeterlambatan } from "@/components/emails/email-keterlambatan"
-import { createClient } from "@supabase/supabase-js"
 import { format, differenceInDays, parseISO } from "date-fns"
 import { id as localeId } from "date-fns/locale"
+import { supabase } from "@/lib/supabase"
 
 // Inisialisasi Resend dengan API key
 const resend = new Resend(process.env.RESEND_API_KEY)
-
-// Inisialisasi klien Supabase
-const urlSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const kunciLayananSupabase = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(urlSupabase, kunciLayananSupabase)
 
 export async function kirimEmailKeterlambatan(idPeminjaman: string) {
   try {
@@ -58,7 +53,7 @@ export async function kirimEmailKeterlambatan(idPeminjaman: string) {
 
     // Kirim email menggunakan Resend
     const { data, error: errorKirim } = await resend.emails.send({
-      from: "IPB Bike Center <no-reply@info-center.com>",
+      from: "IPB Bike Center <no-reply@info.ipbbike.my.id>",
       to: [peminjaman.Users[0].email],
       subject: "Pemberitahuan Keterlambatan Pengembalian Sepeda",
       react: EmailKeterlambatan({
