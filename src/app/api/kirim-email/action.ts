@@ -53,15 +53,15 @@ export async function kirimEmailKeterlambatanByServer() {
 
       // Format tanggal untuk email
       const tanggalPeminjamanFormat = format(parseISO(peminjaman.tanggalPeminjaman), "d MMMM yyyy", { locale: localeId })
-      const tanggalPengembalianFormat = format(parseISO(peminjaman.tanggalPengembalian), "d MMMM yyyy", {
-        locale: localeId,
-      })
+      const tanggalPengembalianFormat = format(parseISO(peminjaman.tanggalPengembalian), "d MMMM yyyy", { locale: localeId })
 
-      // Tentukan batas pengembalian: Senin-Jumat jam 16:00, Sabtu jam 12:00
+      // Tentukan batas pengembalian: Senin-Jumat jam 16:00, Sabtu jam 12:00 (WIB/GMT+7)
       const now = new Date()
-      const hari = now.getDay() // 0: Minggu, 1: Senin, ..., 6: Sabtu
+      // Konversi ke waktu GMT+7 (WIB)
+      const nowWIB = new Date(now.getTime() + (7 * 60 - now.getTimezoneOffset()) * 60000)
+      const hari = nowWIB.getDay() // 0: Minggu, 1: Senin, ..., 6: Sabtu
 
-      let batasPeminjaman = now
+      let batasPeminjaman = new Date(nowWIB)
       if (hari === 6) {
         batasPeminjaman.setHours(12, 0, 0, 0)
       } else {
@@ -69,9 +69,10 @@ export async function kirimEmailKeterlambatanByServer() {
       }
 
       // Hitung hari keterlambatan
-      const hariTerlambat = differenceInDays(batasPeminjaman, parseISO(peminjaman.tanggalPengembalian))
-      const jamTerlambat = differenceInHours(batasPeminjaman, parseISO(peminjaman.tanggalPengembalian)) 
-      const menitTerlambat = differenceInMinutes(batasPeminjaman, parseISO(peminjaman.tanggalPengembalian))
+      const tanggalPengembalian = parseISO(peminjaman.tanggalPengembalian)
+      const hariTerlambat = differenceInDays(batasPeminjaman, tanggalPengembalian)
+      const jamTerlambat = differenceInHours(batasPeminjaman, tanggalPengembalian)
+      const menitTerlambat = differenceInMinutes(batasPeminjaman, tanggalPengembalian)
 
       const waktuTerlambat = hariTerlambat > 0 ? `${hariTerlambat} Hari` : jamTerlambat > 0 ? `${jamTerlambat} Jam` : `${menitTerlambat} Menit`
 
@@ -96,9 +97,7 @@ export async function kirimEmailKeterlambatanByServer() {
         results.push({ id: peminjaman.id, sukses: false, error: errorKirim })
         continue
       }
-
-      // Update catatan peminjaman untuk menandai bahwa notifikasi telah dikirim
-      await supabaseAdmin.from("Peminjaman").update({ notifikasiTerkirim: true }).eq("id", peminjaman.id)
+      
       results.push({ id: peminjaman.id, sukses: true, data })
     }
     return { sukses: true, results }

@@ -227,7 +227,7 @@ export function CardRiwayat({
         let fileNamaSurat = await getFileNameFromSupabase('suratPeminjaman');
         
         // Update status peminjaman menjadi "Selesai" (statusId 4)
-        await supabase.from('Peminjaman').update({ statusId: 4 }).eq('id', id);
+        await supabase.from('Peminjaman').update({ statusId: 4, notifikasiTerkirim: true }).eq('id', id);
         await supabase
           .from('DataSepeda')
           .update({ status: 'Tersedia' })
