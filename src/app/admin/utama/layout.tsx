@@ -12,7 +12,6 @@ import { UserGreeting } from '@/features/utama/components/user-greeting';
 import {
   JumlahSepedaTersedia,
   JumlahSepedaDipinjam,
-  JumlahPeminjamanBulanan,
   JumlahMenungguPersetujuan
 } from '@/features/utama/components/data-sepeda';
 
@@ -57,21 +56,6 @@ export default function OverViewLayout({}: {}) {
               <div className='font-muted-foreground line-clamp-1 flex gap-2'>
                 <IconBike className='size-5' />
                 Kondisi sepeda yang layak pakai dan tidak sedang dipinjam
-              </div>
-            </CardFooter>
-          </Card>
-          <Card className='@container/card'>
-            <CardHeader>
-              <CardTitle>Total Pengajuan Peminjaman</CardTitle>
-              <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-              <JumlahPeminjamanBulanan />
-              </CardTitle>
-              <CardAction></CardAction>
-            </CardHeader>
-            <CardFooter className='flex-col items-start gap-1.5 text-sm'>
-              <div className='font-muted-foreground line-clamp-1 flex gap-2'>
-                <IconCalendar className='size-5' />
-                Per Bulan {getCurrentMonthYearID()}
               </div>
             </CardFooter>
           </Card>
