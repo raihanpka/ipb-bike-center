@@ -64,7 +64,7 @@ export default function OverViewLayout({}: {}) {
             <CardHeader>
               <CardTitle>Total Pengajuan Peminjaman</CardTitle>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
-                <JumlahPeminjamanBulanan />
+              <JumlahPeminjamanBulanan />
               </CardTitle>
               <CardAction></CardAction>
             </CardHeader>

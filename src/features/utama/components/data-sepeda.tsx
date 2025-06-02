@@ -44,17 +44,28 @@ export async function JumlahMenungguPersetujuan(): Promise<number> {
 export async function JumlahPeminjamanBulanan(): Promise<number> {
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
+  const month = now.getMonth();
 
-  const firstDay = `${year}-${month}-01`;
-  const lastDay = `${year}-${month}-31`;
+  // First day of current month
+  const firstDay = new Date(year, month, 1);
+  // Last day of current month
+  const lastDay = new Date(year, month + 1, 0);
+
+  // Format to YYYY-MM-DD
+  const formatDate = (date: Date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+      date.getDate()
+    ).padStart(2, '0')}`;
+
+  const firstDayStr = formatDate(firstDay);
+  const lastDayStr = formatDate(lastDay);
 
   const { count, error } = await supabase
     .from('Peminjaman')
     .select('*', { count: 'exact', head: true })
-    .gte('tanggalPeminjaman', firstDay)
-    .lte('tanggalPeminjaman', lastDay)
-    .not('statusId', 'in', '(5,3)');
+    .gte('tanggalPeminjaman', firstDayStr)
+    .lte('tanggalPeminjaman', lastDayStr)
+    .in('statusId', [2, 6]);
 
   if (error) {
     throw new Error(
