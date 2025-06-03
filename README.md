@@ -159,6 +159,10 @@ classDiagram
 - **Cloud Deployment**: [Vercel](https://vercel.com/)
 - **Document Generation**: [jsPDF](https://www.npmjs.com/package/jspdf) & [jsPDF-autotable](https://www.npmjs.com/package/jspdf-autotable)
 - **Email API**: [Resend](https://resend.com)
+- **Charting & Data Visualization**: [Recharts](https://recharts.org/)
+- **Maps**: [React Leaflet](https://react-leaflet.js.org/)
+- **QR Code Functionality:** [qrcode.react](https://github.com/zpao/qrcode.react), [qr-scanner](https://www.npmjs.com/package/qr-scanner)
+- **Utilities:** [date-fns](https://date-fns.org/) (Date utility), [zod](https://zod.dev) (schema validation)
 
 ---
 
