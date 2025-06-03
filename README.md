@@ -6,6 +6,137 @@ https://github.com/raihanpka/ipb-bike-center/assets/1375fabc-43e2-4ef8-b43c-594d
 
 ---
 
+## 📌 Diagram
+
+```mermaid
+classDiagram
+    %% === ENTITAS UTAMA ===
+    class User {
+        +String id
+        +String nama
+        +String email
+        +String nomorTelepon
+        +String role
+        +String createdAt
+        +String updatedAt
+        +Boolean deleted
+        +login()
+        +logout()
+        +updateProfile()
+        +lihatRiwayatPeminjaman()
+        +scanQR()
+    }
+
+    class DataSepeda {
+        +String nomorSeri
+        +String merk
+        +String jenis
+        +String status
+        +String tanggalPerawatanTerakhir
+        +String deskripsi
+        +updateStatus()
+        +perawatan()
+        +tambahSepeda()
+        +editSepeda()
+        +hapusSepeda()
+    }
+
+    class StatusPeminjaman {
+        +Number id
+        +String nama
+        +String createdAt
+        +String updatedAt
+    }
+
+    class Peminjaman {
+        +String id
+        +String userId
+        +String nomorSeriSepeda
+        +String tanggalPeminjaman
+        +String jangkaPeminjaman
+        +String tanggalPengembalian
+        +Number statusId
+        +String nomorTeleponAktif
+        +String fotoPeminjam
+        +String fotoKTM
+        +String suratPeminjaman
+        +Boolean notifikasiTerkirim
+        +String createdAt
+        +String updatedAt
+        +ajukan()
+        +approve()
+        +tolak()
+        +selesai()
+        +batalkan()
+        +prosesPengembalian()
+        +cekKeterlambatan()
+    }
+
+    class EmailKeterlambatan {
+        +kirimEmailKeterlambatanByServer()
+        +formatTanggal()
+        +hitungKeterlambatan()
+    }
+
+    class DashboardLaporan {
+        +generateStatistik()
+        +filterLaporan()
+        +lihatDetailLaporan()
+    }
+
+    %% === FLOW UTAMA ===
+    class FormPeminjamanUser {
+        +ajukanPeminjaman()
+        +uploadBerkas()
+        +validasiInput()
+        +hitungTanggalPengembalian()
+    }
+
+    class CardPeminjamanAdmin {
+        +approve()
+        +tolak()
+        +selesai()
+        +cekKeterlambatan()
+        +updateStatus()
+        +lihatDataUser()
+        +lihatDetailPeminjaman()
+        +downloadSurat()
+    }
+
+    class CardRiwayatPeminjamanUser {
+        +batalkan()
+        +prosesPengembalian()
+        +scanQR()
+        +lihatDetail()
+        +uploadBukti()
+    }
+
+    %% === RELASI DATA ===
+    User "1" -- "*" Peminjaman : memiliki
+    DataSepeda "1" -- "*" Peminjaman : dipinjam
+    StatusPeminjaman "1" -- "*" Peminjaman : status
+
+    %% === FLOW/PROSES ===
+    FormPeminjamanUser ..> Peminjaman : ajukan()
+    FormPeminjamanUser ..> DataSepeda : updateStatus('Dipinjam')
+    FormPeminjamanUser ..> User : uploadBerkas()
+    CardPeminjamanAdmin ..> Peminjaman : approve()/tolak()/selesai()
+    CardPeminjamanAdmin ..> DataSepeda : updateStatus('Tersedia'/'Dipinjam')
+    CardPeminjamanAdmin ..> User : lihatDataUser()
+    CardPeminjamanAdmin ..> EmailKeterlambatan : kirimEmailKeterlambatanByServer()
+    CardPeminjamanAdmin ..> DashboardLaporan : generateStatistik()
+        
+    CardRiwayatPeminjamanUser ..> Peminjaman : batalkan()/prosesPengembalian()
+    CardRiwayatPeminjamanUser ..> DataSepeda : updateStatus('Tersedia')
+    CardRiwayatPeminjamanUser ..> User : scanQR()
+
+    %% === NOTIFIKASI/EMAIL ===
+    Peminjaman ..> EmailKeterlambatan : triggerKeterlambatan()
+    EmailKeterlambatan ..> User : kirimEmail()
+```
+
+---
+
 ## ✨ Fitur Utama
 
 - Layanan Peminjaman & Pengembalian Sepeda (✅)
@@ -28,6 +159,10 @@ https://github.com/raihanpka/ipb-bike-center/assets/1375fabc-43e2-4ef8-b43c-594d
 - **Cloud Deployment**: [Vercel](https://vercel.com/)
 - **Document Generation**: [jsPDF](https://www.npmjs.com/package/jspdf) & [jsPDF-autotable](https://www.npmjs.com/package/jspdf-autotable)
 - **Email API**: [Resend](https://resend.com)
+- **Charting & Data Visualization**: [Recharts](https://recharts.org/)
+- **Maps**: [React Leaflet](https://react-leaflet.js.org/)
+- **QR Code Functionality:** [qrcode.react](https://github.com/zpao/qrcode.react), [qr-scanner](https://www.npmjs.com/package/qr-scanner)
+- **Utilities:** [date-fns](https://date-fns.org/) (Date utility), [zod](https://zod.dev) (schema validation)
 
 ---
 
