@@ -1,0 +1,47 @@
+---
+title: Sequence Diagram IPB Bike Center
+description: Diagram urutan interaksi utama antara user, admin, dan sistem pada aplikasi IPB Bike Center
+---
+
+```mermaid
+sequenceDiagram
+    %% === USER: Pengajuan Peminjaman ===
+    participant User
+    participant Frontend
+    participant Backend
+    participant Admin
+
+    User->>Frontend: Login
+    Frontend->>Backend: Autentikasi
+    Backend-->>Frontend: Token/User Data
+    User->>Frontend: Ajukan Peminjaman
+    Frontend->>Backend: Simpan Data Peminjaman & Upload Berkas
+    Backend-->>Frontend: Status "Menunggu Persetujuan"
+    Admin->>Frontend: Lihat Daftar Peminjaman
+    Frontend->>Backend: Ambil Data Peminjaman
+    Backend-->>Frontend: Data Peminjaman
+    Admin->>Frontend: Lihat Detail Peminjaman
+    Admin->>Frontend: Approve/Tolak/Selesai
+    Frontend->>Backend: Update Status Peminjaman
+    Backend-->>Frontend: Status Update
+    Backend-->>User: Notifikasi Email (Jika Terlambat)
+
+    %% === USER: Pengembalian Sepeda ===
+    User->>Frontend: Scan QR (Pengembalian)
+    Frontend->>Backend: Validasi QR & Update Status
+    Backend-->>Frontend: Status "Selesai"/"Terlambat"
+    Backend-->>User: Notifikasi Email (Jika Terlambat)
+
+    %% === ADMIN: Kelola Data Sepeda ===
+    Admin->>Frontend: Tambah/Edit/Hapus Sepeda
+    Frontend->>Backend: Update DataSepeda
+    Backend-->>Frontend: Konfirmasi
+
+    %% === ADMIN: Laporan & PDF ===
+    Admin->>Frontend: Buka Dashboard Laporan
+    Frontend->>Backend: Ambil Data Laporan
+    Backend-->>Frontend: Data Laporan
+    Admin->>Frontend: Download PDF
+    Frontend->>Backend: Generate PDF
+    Backend-->>Frontend: File PDF
+```

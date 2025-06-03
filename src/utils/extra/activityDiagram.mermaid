@@ -1,0 +1,54 @@
+---
+title: Activity Diagram IPB Bike Center
+description: Diagram aktivitas utama untuk fitur admin dan user pada aplikasi IPB Bike Center
+---
+%% Activity Diagram: Fitur Admin & User IPB Bike Center
+stateDiagram-v2
+    [*] --> Login
+    Login --> DashboardUser : User
+    Login --> DashboardAdmin : Admin
+
+    %% === USER FLOW ===
+    state DashboardUser {
+        [*] --> LihatKetersediaanSepeda
+        LihatKetersediaanSepeda --> AjukanPeminjaman
+        AjukanPeminjaman --> UploadBerkas
+        UploadBerkas --> MenungguPersetujuan
+        MenungguPersetujuan --> PeminjamanAktif : Disetujui
+        MenungguPersetujuan --> Ditolak : Ditolak
+        PeminjamanAktif --> PengembalianSepeda
+        PengembalianSepeda --> Selesai
+        PengembalianSepeda --> Terlambat : Lewat Batas Waktu
+        PeminjamanAktif --> BatalkanPeminjaman : User membatalkan
+        PeminjamanAktif --> ScanQR : Pengembalian
+        ScanQR --> PengembalianSepeda
+        PeminjamanAktif --> LihatRiwayatPeminjaman
+        LihatRiwayatPeminjaman --> [*]
+    }
+
+    %% === ADMIN FLOW ===
+    state DashboardAdmin {
+        [*] --> KelolaPeminjaman
+        KelolaPeminjaman --> LihatDetailPeminjaman
+        LihatDetailPeminjaman --> SetujuiPeminjaman : Approve
+        LihatDetailPeminjaman --> TolakPeminjaman : Tolak
+        LihatDetailPeminjaman --> TandaiSelesai : Selesai
+        LihatDetailPeminjaman --> TandaiTerlambat : Cek Keterlambatan
+        KelolaPeminjaman --> [*]
+        [*] --> KelolaDataSepeda
+        KelolaDataSepeda --> TambahSepeda
+        KelolaDataSepeda --> EditSepeda
+        KelolaDataSepeda --> HapusSepeda
+        KelolaDataSepeda --> [*]
+        [*] --> DashboardLaporan
+        DashboardLaporan --> FilterLaporan
+        FilterLaporan --> LihatTabelLaporan
+        LihatTabelLaporan --> DownloadPDF
+        DownloadPDF --> [*]
+        [*] --> QRGenerator
+        QRGenerator --> [*]
+    }
+
+    %% === NOTIFIKASI ===
+    PengembalianSepeda --> NotifikasiKeterlambatan : Jika Terlambat
+    NotifikasiKeterlambatan --> [*]
