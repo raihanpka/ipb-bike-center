@@ -336,8 +336,18 @@ export function CardPeminjamanAdmin({
               </Button>
             </>
           )}
-
-          {statusId === 2 || statusId === 6 && ( // Aktif
+          {statusId === 2 && ( // Aktif
+            <Button
+              size='sm'
+              variant='outline'
+              className='flex items-center gap-1'
+              onClick={handleComplete}
+              disabled={isSubmitting}
+            >
+              <Check className='h-4 w-4' /> Selesai
+            </Button>
+          )}
+          {statusId === 6 && ( // Terlambat
             <Button
               size='sm'
               variant='outline'

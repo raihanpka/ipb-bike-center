@@ -28,7 +28,6 @@ export function QRCodeGenerator({
   useEffect(() => {
     const generateEncryptedQR = async () => {
       if (!nomorSeri) return;
-
       try {
         setIsLoading(true);
         // Encrypt the nomorSeri for the QR code
@@ -40,7 +39,6 @@ export function QRCodeGenerator({
         setIsLoading(false);
       }
     };
-
     generateEncryptedQR();
   }, [nomorSeri]);
 
@@ -95,7 +93,7 @@ export function QRCodeGenerator({
       <CardContent className='flex justify-center'>
         {isLoading ? (
           <div className='flex h-64 w-64 items-center justify-center'>
-            <Loader2 className='text-muted-foreground h-8 w-8 animate-spin' />
+            Silakan cari lalu pilih nomor seri sepeda untuk membuat QR Code
           </div>
         ) : (
           <div className='rounded-lg bg-white p-4'>

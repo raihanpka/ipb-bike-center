@@ -386,7 +386,17 @@ export function CardRiwayat({
               )}
             </Button>
           )}
-          {statusId === 2 || statusId === 6 && (
+          {statusId === 2 && (
+            <Button
+              variant='outline'
+              className='w-full'
+              onClick={openDialog}
+              disabled={isLoading}
+            >
+              Upload / Scan QR Pengembalian
+            </Button>
+          )}
+          {statusId === 6 && (
             <Button
               variant='outline'
               className='w-full'
